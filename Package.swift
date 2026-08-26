@@ -16,6 +16,10 @@ let package = Package(
     ],
     dependencies: [
         .package(
+            url: "https://github.com/swift-molecules/swift-affine.git",
+            branch: "main"
+        ),
+        .package(
             url: "https://github.com/swift-molecules/swift-buffer.git",
             branch: "main"
         ),
@@ -63,12 +67,20 @@ let package = Package(
             url: "https://github.com/swift-molecules/swift-ownership.git",
             branch: "main"
         ),
+        .package(
+            url: "https://github.com/swift-molecules/swift-ordinal.git",
+            branch: "main"
+        ),
     ],
     targets: [
 
         .target(
             name: "Ownership Shared Primitive",
             dependencies: [
+                .product(
+                    name: "Affine Standard Library Integration",
+                    package: "swift-affine"
+                ),
                 .product(name: "Buffer Primitive", package: "swift-buffer"),
                 .product(name: "Buffer Protocol", package: "swift-buffer"),
                 .product(
@@ -102,6 +114,10 @@ let package = Package(
                     package: "swift-memory-allocation"
                 ),
                 .product(name: "Index", package: "swift-index"),
+                .product(
+                    name: "Ordinal Standard Library Integration",
+                    package: "swift-ordinal"
+                ),
                 .product(name: "Span Protocol", package: "swift-span"),
                 .product(name: "Ownership Box", package: "swift-ownership"),
                 .product(name: "Ownership Primitive", package: "swift-ownership"),
@@ -112,6 +128,7 @@ let package = Package(
             name: "Shared Tests",
             dependencies: [
                 "Ownership Shared Primitive",
+                .product(name: "Buffer Linear", package: "swift-buffer-linear"),
                 .product(
                     name: "Buffer Linear Primitive",
                     package: "swift-buffer-linear"
