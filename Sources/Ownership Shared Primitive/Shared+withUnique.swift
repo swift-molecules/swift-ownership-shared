@@ -1,4 +1,4 @@
-public import Ownership_Box_Primitive
+public import Ownership_Box
 
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 

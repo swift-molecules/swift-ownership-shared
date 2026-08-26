@@ -1,8 +1,8 @@
-public import Index_Primitive
+public import Index
 public import Memory_Allocator_Primitive
-public import Memory_Heap_Primitive
-public import Ownership_Box_Primitive
-public import Storage_Generational_Primitive
+public import Memory_Heap
+public import Ownership_Box
+public import Storage_Generational
 public import Storage_Primitive
 public import Store_Primitive
 

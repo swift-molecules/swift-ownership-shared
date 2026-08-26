@@ -1,12 +1,12 @@
 import Buffer_Primitive
-import Buffer_Primitive_Test_Support
+import Buffer_Test_Support
 import Buffer_Ring_Bounded_Primitive
 import Buffer_Ring_Primitive
-import Index_Primitive
+import Index
 import Memory_Allocator_Primitive
-import Memory_Heap_Primitive
+import Memory_Heap
 import Ownership_Shared_Primitive
-import Storage_Contiguous_Primitive
+import Storage_Contiguous
 import Testing
 
 private typealias HeapStorage<E: ~Copyable> =

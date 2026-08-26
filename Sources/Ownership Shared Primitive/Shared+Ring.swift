@@ -2,9 +2,9 @@ public import Buffer_Primitive
 public import Buffer_Ring_Bounded_Primitive
 public import Buffer_Ring_Primitive
 public import Memory_Allocator_Primitive
-public import Memory_Heap_Primitive
-public import Ownership_Box_Primitive
-public import Storage_Contiguous_Primitive
+public import Memory_Heap
+public import Ownership_Box
+public import Storage_Contiguous
 
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 

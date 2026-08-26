@@ -70,7 +70,7 @@ let package = Package(
             name: "Ownership Shared Primitive",
             dependencies: [
                 .product(name: "Buffer Primitive", package: "swift-buffer"),
-                .product(name: "Buffer Protocol Primitive", package: "swift-buffer"),
+                .product(name: "Buffer Protocol", package: "swift-buffer"),
                 .product(
                     name: "Buffer Linear Primitive",
                     package: "swift-buffer-linear"
@@ -85,31 +85,31 @@ let package = Package(
                     package: "swift-buffer-ring"
                 ),
                 .product(
-                    name: "Storage Generational Primitive",
+                    name: "Storage Generational",
                     package: "swift-storage-generational"
                 ),
                 .product(name: "Hash Indexed Primitive", package: "swift-hash-table"),
-                .product(name: "Hash Primitive", package: "swift-hash"),
+                .product(name: "Hash", package: "swift-hash"),
                 .product(name: "Store Primitive", package: "swift-storage"),
-                .product(name: "Store Protocol Primitive", package: "swift-storage"),
+                .product(name: "Store Protocol", package: "swift-storage"),
                 .product(
-                    name: "Storage Contiguous Primitive",
+                    name: "Storage Contiguous",
                     package: "swift-storage"
                 ),
-                .product(name: "Memory Heap Primitive", package: "swift-memory-heap"),
+                .product(name: "Memory Heap", package: "swift-memory-heap"),
                 .product(
                     name: "Memory Allocator Primitive",
                     package: "swift-memory-allocation"
                 ),
-                .product(name: "Index Primitive", package: "swift-index"),
-                .product(name: "Span Protocol Primitive", package: "swift-span"),
-                .product(name: "Ownership Box Primitive", package: "swift-ownership"),
+                .product(name: "Index", package: "swift-index"),
+                .product(name: "Span Protocol", package: "swift-span"),
+                .product(name: "Ownership Box", package: "swift-ownership"),
                 .product(name: "Ownership Primitive", package: "swift-ownership"),
             ]
         ),
 
         .testTarget(
-            name: "Shared Primitive Tests",
+            name: "Shared Tests",
             dependencies: [
                 "Ownership Shared Primitive",
                 .product(
@@ -126,10 +126,10 @@ let package = Package(
                     package: "swift-buffer-ring"
                 ),
                 .product(
-                    name: "Buffer Primitive Test Support",
+                    name: "Buffer Test Support",
                     package: "swift-buffer"
                 ),
-                .product(name: "Index Primitive", package: "swift-index"),
+                .product(name: "Index", package: "swift-index"),
             ]
         ),
     ],

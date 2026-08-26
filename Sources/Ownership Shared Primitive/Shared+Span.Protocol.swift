@@ -1,5 +1,5 @@
-public import Ownership_Box_Primitive
-public import Span_Protocol_Primitive
+public import Ownership_Box
+public import Span_Protocol
 
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 

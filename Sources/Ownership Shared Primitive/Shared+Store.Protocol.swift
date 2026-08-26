@@ -1,7 +1,7 @@
-public import Buffer_Protocol_Primitive
-public import Index_Primitive
-public import Ownership_Box_Primitive
-public import Store_Protocol_Primitive
+public import Buffer_Protocol
+public import Index
+public import Ownership_Box
+public import Store_Protocol
 
 extension Ownership.Shared: Store.`Protocol` where Element: ~Copyable, B: ~Copyable {
 
