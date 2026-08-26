@@ -1,7 +1,7 @@
-# Ownership Shared Primitives
+# Ownership Shared Primitive
 
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
-[![CI](https://github.com/swift-primitives/swift-ownership-shared-primitives/actions/workflows/ci.yml/badge.svg)](https://github.com/swift-primitives/swift-ownership-shared-primitives/actions/workflows/ci.yml)
+[![CI](https://github.com/swift-molecules/swift-ownership-shared/actions/workflows/ci.yml/badge.svg)](https://github.com/swift-molecules/swift-ownership-shared/actions/workflows/ci.yml)
 
 `Ownership.Shared<Element, B>` — the copy-on-write column. It wraps a backing column (`B: Store.Protocol & Buffer.Protocol`) in a single refcounted box and presents a **value-semantic** surface over it: copying an `Ownership.Shared` shares the backing (no element copy), and the backing diverges **copy-on-write** only when a holder mutates while the box is shared. This is how a move-only (`~Copyable`) column becomes a freely-copyable value without giving up its zero-copy storage.
 
@@ -37,7 +37,7 @@ Add the dependency to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/swift-primitives/swift-ownership-shared-primitives.git", branch: "main")
+    .package(url: "https://github.com/swift-molecules/swift-ownership-shared.git", branch: "main")
 ]
 ```
 
@@ -47,7 +47,7 @@ Add the product to your target:
 .target(
     name: "App",
     dependencies: [
-        .product(name: "Ownership Shared Primitive", package: "swift-ownership-shared-primitives")
+        .product(name: "Ownership Shared Primitive", package: "swift-ownership-shared")
     ]
 )
 ```
@@ -78,10 +78,9 @@ The package is pre-1.0 — depend on `branch: "main"` until `0.1.0` is tagged. R
 
 ## Related Packages
 
-- [`swift-store-primitives`](https://github.com/swift-primitives/swift-store-primitives) — `Store.Protocol`, the column capability `Ownership.Shared` wraps.
-- [`swift-buffer-primitives`](https://github.com/swift-primitives/swift-buffer-primitives) — `Buffer.Protocol`, the logical-count capability `Ownership.Shared` requires.
-- [`swift-ownership-primitives`](https://github.com/swift-primitives/swift-ownership-primitives) — `Ownership`, the namespace this column extends, and `Ownership.Box`, the refcounted cell it wraps.
-- [`swift-column-primitives`](https://github.com/swift-primitives/swift-column-primitives) — `Column`, the canonical backings an `Ownership.Shared` is typically built over.
+- [`swift-storage`](https://github.com/swift-molecules/swift-storage) — `Store.Protocol`, the column capability `Ownership.Shared` wraps.
+- [`swift-buffer`](https://github.com/swift-molecules/swift-buffer) — `Buffer.Protocol`, the logical-count capability `Ownership.Shared` requires.
+- [`swift-ownership`](https://github.com/swift-molecules/swift-ownership) — `Ownership`, the namespace this column extends, and `Ownership.Box`, the refcounted cell it wraps.
 
 ---
 

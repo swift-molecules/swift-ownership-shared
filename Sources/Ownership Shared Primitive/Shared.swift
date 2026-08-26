@@ -1,6 +1,6 @@
-public import Buffer_Protocol_Primitives
-public import Ownership_Box_Primitives
-public import Store_Protocol_Primitives
+public import Buffer_Protocol_Primitive
+public import Ownership_Box_Primitive
+public import Store_Protocol_Primitive
 
 extension Ownership {
 

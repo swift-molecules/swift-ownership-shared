@@ -1,6 +1,6 @@
-import Affine_Primitives_Standard_Library_Integration
-public import Index_Primitives
-import Ordinal_Primitives_Standard_Library_Integration
+import Affine_Primitive_Standard_Library_Integration
+public import Index_Primitive
+import Ordinal_Primitive_Standard_Library_Integration
 
 extension Ownership.Shared: Equatable where Element: Equatable, B: ~Copyable {
 
