@@ -147,6 +147,17 @@ let package = Package(
                     package: "swift-buffer"
                 ),
                 .product(name: "Index", package: "swift-index"),
+                .product(name: "Buffer Primitive", package: "swift-buffer"),
+                .product(
+                    name: "Memory Allocator Primitive",
+                    package: "swift-memory-allocation"
+                ),
+                .product(name: "Memory Heap", package: "swift-memory-heap"),
+                .product(name: "Span Protocol", package: "swift-span"),
+                .product(
+                    name: "Storage Contiguous",
+                    package: "swift-storage"
+                ),
             ]
         ),
     ],
