@@ -2,7 +2,7 @@
 
     import Ownership_Shared_Primitive
     import Buffer_Primitive
-    import Buffer_Linear
+    import Buffer_Linear_Primitive
     import Storage_Contiguous
     import Memory_Heap
     import Memory_Allocator_Primitive

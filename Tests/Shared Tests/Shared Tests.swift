@@ -1,4 +1,4 @@
-import Buffer_Linear
+import Buffer_Linear_Primitive
 import Buffer_Primitive
 import Index
 import Memory_Allocator_Primitive
