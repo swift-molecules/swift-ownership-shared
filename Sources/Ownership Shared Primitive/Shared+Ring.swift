@@ -1,7 +1,7 @@
 public import Buffer_Primitive
 public import Buffer_Ring_Bounded_Primitive
 public import Buffer_Ring_Primitive
-public import Memory_Allocator_Primitive
+public import Memory_Allocator
 public import Memory
 public import Ownership_Box
 public import Storage_Contiguous

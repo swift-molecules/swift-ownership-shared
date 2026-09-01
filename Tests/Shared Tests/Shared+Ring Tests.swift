@@ -3,7 +3,7 @@ import Buffer_Test_Support
 import Buffer_Ring_Bounded_Primitive
 import Buffer_Ring_Primitive
 import Index
-import Memory_Allocator_Primitive
+import Memory_Allocator
 import Memory_Heap
 import Ownership_Shared_Primitive
 import Storage_Contiguous

@@ -2,7 +2,7 @@ public import Buffer_Linear_Primitive
 public import Buffer_Primitive
 public import Hash_Indexed_Primitive
 import Hash
-public import Memory_Allocator_Primitive
+public import Memory_Allocator
 public import Memory
 public import Ownership_Box
 public import Storage_Contiguous
