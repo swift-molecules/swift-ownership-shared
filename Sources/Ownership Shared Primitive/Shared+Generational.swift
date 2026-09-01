@@ -3,7 +3,7 @@ public import Memory_Allocator
 public import Memory
 public import Ownership_Box
 public import Storage_Generational
-public import Storage_Primitive
+public import Storage
 public import Store_Primitive
 
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {

@@ -1,4 +1,4 @@
-import Buffer_Primitive
+import Buffer
 import Buffer_Test_Support
 import Buffer_Ring_Bounded_Primitive
 import Buffer_Ring_Primitive

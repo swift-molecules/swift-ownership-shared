@@ -1,6 +1,6 @@
 public import Buffer_Linear_Bounded_Primitive
 public import Buffer_Linear_Primitive
-public import Buffer_Primitive
+public import Buffer
 public import Memory_Allocator
 public import Memory
 public import Ownership_Box

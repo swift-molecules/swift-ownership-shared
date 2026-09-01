@@ -1,6 +1,6 @@
 import Buffer_Linear_Bounded_Primitive
 import Buffer_Linear_Primitive
-import Buffer_Primitive
+import Buffer
 import Buffer_Test_Support
 import Index
 import Memory_Allocator
