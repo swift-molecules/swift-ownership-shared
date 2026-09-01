@@ -1,19 +1,29 @@
+import Tagged_Standard_Library_Integration
+import Ordinal_Cardinal
+import Ordinal_Tagged
+import Ordinal
+import Cardinal_Standard_Library_Integration
+import Cardinal_Carrier
+import Cardinal_Tagged
+import Cardinal
+import Tagged
+public import Memory_Small
 import Buffer_Linear_Primitive
 import Buffer
 import Index
 import Memory_Allocator
-import Memory_Heap
+import Memory
 import Ownership_Shared_Primitive
 import Storage
 import Synchronization
 import Testing
 
 private typealias HeapColumn<E: ~Copyable> =
-    Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear
+    Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<E>>.Linear
 private typealias SharedColumn<E: ~Copyable> = Ownership.Shared<E, HeapColumn<E>>
 
 private func makeShared<E>(capacity: UInt) -> SharedColumn<E> {
-    SharedColumn<E>(HeapColumn<E>(minimumCapacity: Index<E>.Count(capacity)))
+    SharedColumn<E>(HeapColumn<E>(minimumCapacity: Tagged<E, Cardinal>(capacity)))
 }
 
 private enum Ledger {}
@@ -70,7 +80,7 @@ struct `Shared Concurrency Storm Tests` {
                     }
 
                     let n = mine.count
-                    return n == Index<Int>.Count(UInt(70))
+                    return n == Tagged<Int, Cardinal>(UInt(70))
                 }
             }
             var out: [Bool] = []
@@ -80,7 +90,7 @@ struct `Shared Concurrency Storm Tests` {
         #expect(outcomes.count == 16)
         #expect(outcomes.allSatisfy { $0 })
         let sourceCount = proto.count
-        #expect(sourceCount == Index<Int>.Count(4))
+        #expect(sourceCount == Tagged<Int, Cardinal>(4))
     }
 
     @Test(arguments: [4, 16])

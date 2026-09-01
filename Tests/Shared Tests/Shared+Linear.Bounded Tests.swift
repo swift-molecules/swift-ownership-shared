@@ -1,16 +1,26 @@
+import Tagged_Standard_Library_Integration
+import Ordinal_Cardinal
+import Ordinal_Tagged
+import Ordinal
+import Cardinal_Standard_Library_Integration
+import Cardinal_Carrier
+import Cardinal_Tagged
+import Cardinal
+import Tagged
+public import Memory_Small
 import Buffer_Linear_Bounded_Primitive
 import Buffer_Linear_Primitive
 import Buffer
 import Buffer_Test_Support
 import Index
 import Memory_Allocator
-import Memory_Heap
+import Memory
 import Ownership_Shared_Primitive
 import Storage
 import Testing
 
 private typealias HeapStorage<E: ~Copyable> =
-    Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>
+    Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<E>
 
 private typealias BoundedLinear<E: ~Copyable> = Buffer<HeapStorage<E>>.Linear.Bounded
 
@@ -23,7 +33,7 @@ struct `Shared Linear Bounded Law Tests` {
     func `the shared bounded-linear column obeys the seam ledger laws`() {
         let violations = Seam.Ledger.violations(
             makeEmpty: {
-                SharedBoundedLinear<Int>(BoundedLinear<Int>(minimumCapacity: Index<Int>.Count(4)))
+                SharedBoundedLinear<Int>(BoundedLinear<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
             },
             element: { $0 }
         )
@@ -36,7 +46,7 @@ struct `Shared Linear Bounded CoW Tests` {
 
     @Test
     func `copies share the box; a gated write detaches with capacity preserved exactly`() {
-        var s = SharedBoundedLinear<Int>(BoundedLinear<Int>(minimumCapacity: Index<Int>.Count(4)))
+        var s = SharedBoundedLinear<Int>(BoundedLinear<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
         s.initialize(at: 0, to: 1)
         s.initialize(at: 1, to: 2)
         let capacityBefore = s.capacity
@@ -58,12 +68,12 @@ struct `Shared Linear Bounded CoW Tests` {
         BoundedProbe.reset()
         do {
             var s = SharedBoundedLinear<BoundedItem>(
-                BoundedLinear<BoundedItem>(minimumCapacity: Index<BoundedItem>.Count(2))
+                BoundedLinear<BoundedItem>(minimumCapacity: Tagged<BoundedItem, Cardinal>(2))
             )
             s.initialize(at: 0, to: BoundedItem(7))
             s.initialize(at: 1, to: BoundedItem(8))
             let n = s.count
-            #expect(n == Index<BoundedItem>.Count(2))
+            #expect(n == Tagged<BoundedItem, Cardinal>(2))
         }
         let all = BoundedProbe.destroyedSorted
         #expect(all == [7, 8])

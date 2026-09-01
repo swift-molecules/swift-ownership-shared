@@ -1,26 +1,36 @@
+import Tagged_Standard_Library_Integration
+import Ordinal_Cardinal
+import Ordinal_Tagged
+import Ordinal
+import Cardinal_Standard_Library_Integration
+import Cardinal_Carrier
+import Cardinal_Tagged
+import Cardinal
+import Tagged
+public import Memory_Small
 import Buffer_Linear_Bounded_Primitive
 import Buffer_Linear_Primitive
 import Buffer
 import Index
 import Memory_Allocator
-import Memory_Heap
+import Memory
 import Ownership_Shared_Primitive
 import Storage
 import Testing
 
 private typealias HeapColumn<E: ~Copyable> =
-    Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear
+    Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<E>>.Linear
 private typealias SharedColumn<E: ~Copyable> = Ownership.Shared<E, HeapColumn<E>>
 private typealias BoundedColumn<E: ~Copyable> =
-    Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear.Bounded
+    Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<E>>.Linear.Bounded
 private typealias SharedBounded<E: ~Copyable> = Ownership.Shared<E, BoundedColumn<E>>
 
 private func makeShared<E>(capacity: UInt) -> SharedColumn<E> {
-    SharedColumn<E>(HeapColumn<E>(minimumCapacity: Index<E>.Count(capacity)))
+    SharedColumn<E>(HeapColumn<E>(minimumCapacity: Tagged<E, Cardinal>(capacity)))
 }
 
 private func makeSharedMoveOnly<E: ~Copyable>(capacity: UInt) -> SharedColumn<E> {
-    SharedColumn<E>(HeapColumn<E>(minimumCapacity: Index<E>.Count(capacity)))
+    SharedColumn<E>(HeapColumn<E>(minimumCapacity: Tagged<E, Cardinal>(capacity)))
 }
 
 private struct Item: ~Copyable, Sendable {
@@ -35,13 +45,13 @@ struct `Shared Sendable Surface Tests` {
     func `sendable composes across columns and rungs`() {
         let heap: SharedColumn<Int> = makeShared(capacity: 1)
         requireSendable(heap)
-        let bounded = SharedBounded<Int>(BoundedColumn<Int>(minimumCapacity: Index<Int>.Count(1)))
+        let bounded = SharedBounded<Int>(BoundedColumn<Int>(minimumCapacity: Tagged<Int, Cardinal>(1)))
         requireSendable(bounded)
 
         let moveOnly: SharedColumn<Item> = makeSharedMoveOnly(capacity: 1)
         requireSendable(moveOnly)
         let n = moveOnly.count
-        #expect(n == Index<Item>.Count(0))
+        #expect(n == Tagged<Item, Cardinal>(0))
         #expect(Bool(true))
     }
 }

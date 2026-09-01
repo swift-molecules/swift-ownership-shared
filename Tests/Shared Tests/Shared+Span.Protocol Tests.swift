@@ -1,16 +1,26 @@
+import Tagged_Standard_Library_Integration
+import Ordinal_Cardinal
+import Ordinal_Tagged
+import Ordinal
+import Cardinal_Standard_Library_Integration
+import Cardinal_Carrier
+import Cardinal_Tagged
+import Cardinal
+import Tagged
+public import Memory_Small
 import Buffer_Linear_Primitive
 import Buffer_Linear
 import Buffer
 import Index
 import Memory_Allocator
-import Memory_Heap
+import Memory
 import Ownership_Shared_Primitive
 import Span_Protocol
 import Storage
 import Testing
 
 private typealias HeapStorage<E: ~Copyable> =
-    Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>
+    Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<E>
 
 private typealias HeapColumn<E: ~Copyable> = Buffer<HeapStorage<E>>.Linear
 private typealias SharedColumn<E: ~Copyable> = Ownership.Shared<E, HeapColumn<E>>
@@ -27,7 +37,7 @@ struct `Shared Span Protocol Tests` {
 
     @Test
     func `the laundered span reads the boxed column, directly and via the witness`() {
-        var column = HeapColumn<Int>(minimumCapacity: Index<Int>.Count(4))
+        var column = HeapColumn<Int>(minimumCapacity: Tagged<Int, Cardinal>(4))
         column.append(1)
         column.append(2)
         column.append(3)
@@ -42,7 +52,7 @@ struct `Shared Span Protocol Tests` {
 
     @Test
     func `the empty column vends the lawful empty window`() {
-        let s = SharedColumn<Int>(HeapColumn<Int>(minimumCapacity: Index<Int>.Count(2)))
+        let s = SharedColumn<Int>(HeapColumn<Int>(minimumCapacity: Tagged<Int, Cardinal>(2)))
         let span = s.span
         #expect(span.count == 0)
         #expect(total(s) == 0)
@@ -50,7 +60,7 @@ struct `Shared Span Protocol Tests` {
 
     @Test
     func `a live span survives a sibling's gated detach-mutation unchanged`() {
-        var column = HeapColumn<Int>(minimumCapacity: Index<Int>.Count(4))
+        var column = HeapColumn<Int>(minimumCapacity: Tagged<Int, Cardinal>(4))
         column.append(1)
         column.append(2)
         column.append(3)
@@ -62,8 +72,8 @@ struct `Shared Span Protocol Tests` {
         for i in live.indices { after &+= live[i] }
         #expect(after == 6)
         let siblingCount = sibling.count
-        #expect(siblingCount == Index<Int>.Count(4))
+        #expect(siblingCount == Tagged<Int, Cardinal>(4))
         let ourCount = s.count
-        #expect(ourCount == Index<Int>.Count(3))
+        #expect(ourCount == Tagged<Int, Cardinal>(3))
     }
 }

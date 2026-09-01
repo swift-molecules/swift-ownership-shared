@@ -1,3 +1,14 @@
+public import Cardinal_Standard_Library_Integration
+public import Cardinal_Carrier
+public import Ordinal_Protocol
+public import Ordinal_Cardinal
+public import Memory_Allocator_Protocol
+public import Cardinal
+public import Cardinal_Tagged
+public import Ordinal
+public import Ordinal_Tagged
+public import Tagged
+public import Store
 public import Buffer_Protocol
 public import Index
 public import Ownership_Box
@@ -6,7 +17,7 @@ public import Store_Protocol
 extension Ownership.Shared: Store.`Protocol` where Element: ~Copyable, B: ~Copyable {
 
     @inlinable
-    public var capacity: Index<Element>.Count { box.unguarded.capacity }
+    public var capacity: Tagged<Element, Cardinal> { box.unguarded.capacity }
 
     @inlinable
     public subscript(slot: Index<Element>) -> Element {
@@ -44,5 +55,5 @@ extension Ownership.Shared: Store.`Protocol` where Element: ~Copyable, B: ~Copya
 extension Ownership.Shared: Buffer.`Protocol` where Element: ~Copyable, B: ~Copyable {
 
     @inlinable
-    public var count: Index<Element>.Count { box.unguarded.count }
+    public var count: Tagged<Element, Cardinal> { box.unguarded.count }
 }

@@ -15,6 +15,8 @@ let package = Package(
         .library(name: "Ownership Shared Primitive", targets: ["Ownership Shared Primitive"])
     ],
     dependencies: [
+        .package(url: "https://github.com/swift-atoms/swift-tagged.git", branch: "main"),
+        .package(url: "https://github.com/swift-molecules/swift-memory-small.git", branch: "main"),
         .package(
             url: "https://github.com/swift-atoms/swift-store.git",
             branch: "main"
@@ -107,11 +109,16 @@ let package = Package(
                 .product(name: "Hash Indexed Primitive", package: "swift-hash-table"),
                 .product(name: "Hash", package: "swift-hash"),
                 .product(name: "Store", package: "swift-store"),
+                .product(name: "Memory Small", package: "swift-memory-small"),
                 .product(name: "Store Protocol", package: "swift-store"),
                 .product(name: "Storage", package: "swift-storage"),
                 .product(name: "Memory", package: "swift-memory"),
                 .product(
                     name: "Memory Allocator",
+                    package: "swift-memory-allocation"
+                ),
+                .product(
+                    name: "Memory Allocator Pool",
                     package: "swift-memory-allocation"
                 ),
                 .product(name: "Index", package: "swift-index"),
@@ -128,6 +135,8 @@ let package = Package(
         .testTarget(
             name: "Shared Tests",
             dependencies: [
+                .product(name: "Tagged Standard Library Integration", package: "swift-tagged"),
+
                 "Ownership Shared Primitive",
                 .product(name: "Buffer Linear", package: "swift-buffer-linear"),
                 .product(
@@ -151,6 +160,10 @@ let package = Package(
                 .product(name: "Buffer", package: "swift-buffer"),
                 .product(
                     name: "Memory Allocator",
+                    package: "swift-memory-allocation"
+                ),
+                .product(
+                    name: "Memory Allocator Pool",
                     package: "swift-memory-allocation"
                 ),
                 .product(name: "Memory", package: "swift-memory"),

@@ -1,8 +1,18 @@
+import Tagged_Standard_Library_Integration
+import Ordinal_Cardinal
+import Ordinal_Tagged
+import Ordinal
+import Cardinal_Standard_Library_Integration
+import Cardinal_Carrier
+import Cardinal_Tagged
+import Cardinal
+import Tagged
+public import Memory_Small
 import Buffer_Linear_Primitive
 import Buffer
 import Index
 import Memory_Allocator
-import Memory_Heap
+import Memory
 import Ownership_Shared_Primitive
 import Storage
 import Testing
@@ -34,16 +44,16 @@ extension Probe {
 }
 
 private typealias HeapColumn<E: ~Copyable> =
-    Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear
+    Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<E>>.Linear
 
 private typealias SharedColumn<E: ~Copyable> = Ownership.Shared<E, HeapColumn<E>>
 
 private func makeShared<E>(capacity: UInt) -> SharedColumn<E> {
-    SharedColumn<E>(HeapColumn<E>(minimumCapacity: Index<E>.Count(capacity)))
+    SharedColumn<E>(HeapColumn<E>(minimumCapacity: Tagged<E, Cardinal>(capacity)))
 }
 
 private func makeSharedMoveOnly<E: ~Copyable>(capacity: UInt) -> SharedColumn<E> {
-    SharedColumn<E>(HeapColumn<E>(minimumCapacity: Index<E>.Count(capacity)))
+    SharedColumn<E>(HeapColumn<E>(minimumCapacity: Tagged<E, Cardinal>(capacity)))
 }
 
 @Suite(.serialized)
@@ -64,8 +74,8 @@ struct `Shared Tests` {
         #expect(diverged)
         let aCount = a.count
         let bCount = b.count
-        #expect(aCount == Index<Payload>.Count(3))
-        #expect(bCount == Index<Payload>.Count(2))
+        #expect(aCount == Tagged<Payload, Cardinal>(3))
+        #expect(bCount == Tagged<Payload, Cardinal>(2))
         let b0 = b[.zero].id
         #expect(b0 == 1)
     }
@@ -90,7 +100,7 @@ struct `Shared Tests` {
             a.append(Payload(11))
             let b = a
             let bCount = b.count
-            #expect(bCount == Index<Payload>.Count(2))
+            #expect(bCount == Tagged<Payload, Cardinal>(2))
         }
         let ds = Probe.destroyedSorted
         #expect(ds == [10, 11])

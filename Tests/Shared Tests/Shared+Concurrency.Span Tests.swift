@@ -1,23 +1,33 @@
+import Tagged_Standard_Library_Integration
+import Ordinal_Cardinal
+import Ordinal_Tagged
+import Ordinal
+import Cardinal_Standard_Library_Integration
+import Cardinal_Carrier
+import Cardinal_Tagged
+import Cardinal
+import Tagged
+public import Memory_Small
 import Buffer_Linear_Primitive
 import Buffer
 import Index
 import Memory_Allocator
-import Memory_Heap
+import Memory
 import Ownership_Shared_Primitive
 import Storage
 import Synchronization
 import Testing
 
 private typealias HeapColumn<E: ~Copyable> =
-    Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear
+    Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<E>>.Linear
 private typealias SharedColumn<E: ~Copyable> = Ownership.Shared<E, HeapColumn<E>>
 
 private func makeShared<E>(capacity: UInt) -> SharedColumn<E> {
-    SharedColumn<E>(HeapColumn<E>(minimumCapacity: Index<E>.Count(capacity)))
+    SharedColumn<E>(HeapColumn<E>(minimumCapacity: Tagged<E, Cardinal>(capacity)))
 }
 
 private func makeSharedMoveOnly<E: ~Copyable>(capacity: UInt) -> SharedColumn<E> {
-    SharedColumn<E>(HeapColumn<E>(minimumCapacity: Index<E>.Count(capacity)))
+    SharedColumn<E>(HeapColumn<E>(minimumCapacity: Tagged<E, Cardinal>(capacity)))
 }
 
 private enum Ledger {}
@@ -96,7 +106,7 @@ struct `Shared Concurrency Span Window Tests` {
                     for _ in 0..<200 {
                         let stillShared = (mine._boxID == frozen._boxID)
                         let viaColumn = mine.withColumn { column in
-                            column.count == Index<Int>.Count(2)
+                            column.count == Tagged<Int, Cardinal>(2)
                         }
                         let viaSpan = mine.withSpan { span in
                             span.count == 2 && span[0] == 7 && span[1] == 8
@@ -161,7 +171,7 @@ struct `Shared Concurrency Move Only Tests` {
                     let tookID = took.id
                     _ = consume took
                     let n = column.count
-                    return tookID == t &* 10 &+ 2 && n == Index<Item>.Count(2)
+                    return tookID == t &* 10 &+ 2 && n == Tagged<Item, Cardinal>(2)
                 }
             }
             var out: [Bool] = []

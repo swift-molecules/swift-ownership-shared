@@ -1,23 +1,33 @@
+import Tagged_Standard_Library_Integration
+import Ordinal_Cardinal
+import Ordinal_Tagged
+import Ordinal
+import Cardinal_Standard_Library_Integration
+import Cardinal_Carrier
+import Cardinal_Tagged
+import Cardinal
+import Tagged
+public import Memory_Small
 import Buffer_Linear_Bounded_Primitive
 import Buffer_Linear_Primitive
 import Buffer
 import Index
 import Memory_Allocator
-import Memory_Heap
+import Memory
 import Ownership_Shared_Primitive
 import Storage
 import Synchronization
 import Testing
 
 private typealias HeapColumn<E: ~Copyable> =
-    Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear
+    Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<E>>.Linear
 private typealias SharedColumn<E: ~Copyable> = Ownership.Shared<E, HeapColumn<E>>
 private typealias BoundedColumn<E: ~Copyable> =
-    Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear.Bounded
+    Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<E>>.Linear.Bounded
 private typealias SharedBounded<E: ~Copyable> = Ownership.Shared<E, BoundedColumn<E>>
 
 private func makeShared<E>(capacity: UInt) -> SharedColumn<E> {
-    SharedColumn<E>(HeapColumn<E>(minimumCapacity: Index<E>.Count(capacity)))
+    SharedColumn<E>(HeapColumn<E>(minimumCapacity: Tagged<E, Cardinal>(capacity)))
 }
 
 private enum Ledger {}
@@ -91,7 +101,7 @@ struct `Shared Concurrency Detach Trivial Tests` {
 
     @Test(arguments: [2, 8])
     func `bounded column: concurrent detach preserves capacity exactly`(width: Int) async {
-        var proto = SharedBounded<Int>(BoundedColumn<Int>(minimumCapacity: Index<Int>.Count(8)))
+        var proto = SharedBounded<Int>(BoundedColumn<Int>(minimumCapacity: Tagged<Int, Cardinal>(8)))
         proto.initialize(at: 0, to: 10)
         proto.initialize(at: 1, to: 11)
         let frozen = proto

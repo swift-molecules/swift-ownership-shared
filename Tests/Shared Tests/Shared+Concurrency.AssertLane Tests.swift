@@ -1,20 +1,30 @@
+import Tagged_Standard_Library_Integration
+import Ordinal_Cardinal
+import Ordinal_Tagged
+import Ordinal
+import Cardinal_Standard_Library_Integration
+import Cardinal_Carrier
+import Cardinal_Tagged
+import Cardinal
+import Tagged
+public import Memory_Small
 #if DEBUG
 
     import Ownership_Shared_Primitive
     import Buffer
     import Buffer_Linear_Primitive
     import Storage
-    import Memory_Heap
+    import Memory
     import Memory_Allocator
     import Index
     import Testing
 
     private typealias HeapColumn<E: ~Copyable> =
-        Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear
+        Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<E>>.Linear
     private typealias SharedColumn<E: ~Copyable> = Ownership.Shared<E, HeapColumn<E>>
 
     private func makeShared<E>(capacity: UInt) -> SharedColumn<E> {
-        SharedColumn<E>(HeapColumn<E>(minimumCapacity: Index<E>.Count(capacity)))
+        SharedColumn<E>(HeapColumn<E>(minimumCapacity: Tagged<E, Cardinal>(capacity)))
     }
 
     @Suite
@@ -68,7 +78,7 @@
             let first = a[.zero]
             #expect(first == 10)
             let n = a.count
-            #expect(n == Index<Int>.Count(1))
+            #expect(n == Tagged<Int, Cardinal>(1))
         }
 
         @Test
@@ -80,8 +90,8 @@
             a.appendAssumingUnique(2)
             let aCount = a.count
             let bCount = b.count
-            #expect(aCount == Index<Int>.Count(2))
-            #expect(bCount == Index<Int>.Count(1))
+            #expect(aCount == Tagged<Int, Cardinal>(2))
+            #expect(bCount == Tagged<Int, Cardinal>(1))
         }
     }
 

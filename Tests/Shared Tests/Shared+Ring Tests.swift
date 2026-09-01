@@ -1,16 +1,26 @@
+import Tagged_Standard_Library_Integration
+import Ordinal_Cardinal
+import Ordinal_Tagged
+import Ordinal
+import Cardinal_Standard_Library_Integration
+import Cardinal_Carrier
+import Cardinal_Tagged
+import Cardinal
+import Tagged
+public import Memory_Small
 import Buffer
 import Buffer_Test_Support
 import Buffer_Ring_Bounded_Primitive
 import Buffer_Ring_Primitive
 import Index
 import Memory_Allocator
-import Memory_Heap
+import Memory
 import Ownership_Shared_Primitive
 import Storage
 import Testing
 
 private typealias HeapStorage<E: ~Copyable> =
-    Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>
+    Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<E>
 
 private typealias GrowableRing<E: ~Copyable> = Buffer<HeapStorage<E>>.Ring
 private typealias BoundedRing<E: ~Copyable> = Buffer<HeapStorage<E>>.Ring.Bounded
@@ -24,7 +34,7 @@ struct `Shared Ring Law Tests` {
     @Test
     func `the shared growable-ring column obeys the seam ledger laws`() {
         let violations = Seam.Ledger.violations(
-            makeEmpty: { SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Index<Int>.Count(4))) },
+            makeEmpty: { SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(4))) },
             element: { $0 }
         )
         #expect(violations.isEmpty, "\(violations)")
@@ -34,7 +44,7 @@ struct `Shared Ring Law Tests` {
     func `the shared bounded-ring column obeys the seam ledger laws`() {
         let violations = Seam.Ledger.violations(
             makeEmpty: {
-                SharedBoundedRing<Int>(BoundedRing<Int>(minimumCapacity: Index<Int>.Count(4)))
+                SharedBoundedRing<Int>(BoundedRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
             },
             element: { $0 }
         )
@@ -47,7 +57,7 @@ struct `Shared Ring CoW Tests` {
 
     @Test
     func `copies share the box until a gated seam write diverges them`() {
-        var s = SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Index<Int>.Count(4)))
+        var s = SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
         s.initialize(at: 0, to: 1)
         s.initialize(at: 1, to: 2)
         let t = s
@@ -64,7 +74,7 @@ struct `Shared Ring CoW Tests` {
 
     @Test
     func `a front move through the seam detaches from the sibling`() {
-        var s = SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Index<Int>.Count(4)))
+        var s = SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
         s.initialize(at: 0, to: 7)
         s.initialize(at: 1, to: 8)
         let t = s
@@ -72,8 +82,8 @@ struct `Shared Ring CoW Tests` {
         #expect(popped == 7)
         let mine = s.count
         let theirs = t.count
-        #expect(mine == Index<Int>.Count(1))
-        #expect(theirs == Index<Int>.Count(2))
+        #expect(mine == Tagged<Int, Cardinal>(1))
+        #expect(theirs == Tagged<Int, Cardinal>(2))
         let myFront = s[0]
         let theirFront = t[0]
         #expect(myFront == 8)
@@ -86,7 +96,7 @@ struct `Shared Ring Scoped Access Tests` {
 
     @Test
     func `withUnique detaches first and reaches ops the seam cannot spell`() {
-        var s = SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Index<Int>.Count(4)))
+        var s = SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
         s.initialize(at: 0, to: 2)
         let t = s
         s.withUnique { ring in
@@ -95,9 +105,9 @@ struct `Shared Ring Scoped Access Tests` {
         let myFront = s[0]
         let myCount = s.count
         #expect(myFront == 1)
-        #expect(myCount == Index<Int>.Count(2))
+        #expect(myCount == Tagged<Int, Cardinal>(2))
         let theirCount = t.count
-        #expect(theirCount == Index<Int>.Count(1))
+        #expect(theirCount == Tagged<Int, Cardinal>(1))
         let theirFront = t[0]
         #expect(theirFront == 2)
     }
@@ -107,13 +117,13 @@ struct `Shared Ring Scoped Access Tests` {
         ScopedProbe.reset()
         do {
             var s = SharedRing<ScopedItem>(
-                GrowableRing<ScopedItem>(minimumCapacity: Index<ScopedItem>.Count(2))
+                GrowableRing<ScopedItem>(minimumCapacity: Tagged<ScopedItem, Cardinal>(2))
             )
             s.withUnique(consuming: ScopedItem(1)) { ring, item in
                 ring.pushBack(item)
             }
             let n = s.count
-            #expect(n == Index<ScopedItem>.Count(1))
+            #expect(n == Tagged<ScopedItem, Cardinal>(1))
             let lived = ScopedProbe.destroyedSorted
             #expect(lived.isEmpty)
         }
@@ -123,7 +133,7 @@ struct `Shared Ring Scoped Access Tests` {
 
     @Test
     func `withColumn reads without detaching`() {
-        var s = SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Index<Int>.Count(2)))
+        var s = SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(2)))
         s.initialize(at: 0, to: 42)
         let t = s
         let read = s.withColumn { ring in ring[0] }
@@ -135,7 +145,7 @@ struct `Shared Ring Scoped Access Tests` {
 
     @Test
     func `the bounded column rejects on full through the box`() {
-        var s = SharedBoundedRing<Int>(BoundedRing<Int>(minimumCapacity: Index<Int>.Count(2)))
+        var s = SharedBoundedRing<Int>(BoundedRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(2)))
         s.initialize(at: 0, to: 1)
         s.initialize(at: 1, to: 2)
         let rejected = s.withUnique { ring in
@@ -143,7 +153,7 @@ struct `Shared Ring Scoped Access Tests` {
         }
         #expect(rejected == 3)
         let n = s.count
-        #expect(n == Index<Int>.Count(2))
+        #expect(n == Tagged<Int, Cardinal>(2))
     }
 }
 
@@ -170,7 +180,7 @@ struct `Shared Ring Teardown Tests` {
         DrainProbe.reset()
         do {
             var s = SharedRing<DrainItem>(
-                GrowableRing<DrainItem>(minimumCapacity: Index<DrainItem>.Count(4))
+                GrowableRing<DrainItem>(minimumCapacity: Tagged<DrainItem, Cardinal>(4))
             )
             s.initialize(at: Index<DrainItem>(Ordinal(UInt(0))), to: DrainItem(1))
             s.initialize(at: Index<DrainItem>(Ordinal(UInt(1))), to: DrainItem(2))
@@ -190,7 +200,7 @@ struct `Shared Ring Teardown Tests` {
         DrainProbe.reset()
         do {
             var s = SharedBoundedRing<DrainItem>(
-                BoundedRing<DrainItem>(minimumCapacity: Index<DrainItem>.Count(2))
+                BoundedRing<DrainItem>(minimumCapacity: Tagged<DrainItem, Cardinal>(2))
             )
             s.initialize(at: Index<DrainItem>(Ordinal(UInt(0))), to: DrainItem(5))
         }
