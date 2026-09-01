@@ -121,7 +121,7 @@ let package = Package(
                 ),
                 .product(name: "Span Protocol", package: "swift-span"),
                 .product(name: "Ownership Box", package: "swift-ownership"),
-                .product(name: "Ownership Primitive", package: "swift-ownership"),
+                .product(name: "Ownership", package: "swift-ownership"),
             ]
         ),
 
