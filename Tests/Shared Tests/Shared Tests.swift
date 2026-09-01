@@ -4,7 +4,7 @@ import Index
 import Memory_Allocator
 import Memory_Heap
 import Ownership_Shared_Primitive
-import Storage_Contiguous
+import Storage
 import Testing
 
 private struct Item: ~Copyable {

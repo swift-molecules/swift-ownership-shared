@@ -5,7 +5,7 @@ import Hash
 public import Memory_Allocator
 public import Memory
 public import Ownership_Box
-public import Storage_Contiguous
+public import Storage
 public import Storage
 
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
