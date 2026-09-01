@@ -48,7 +48,7 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-memory-heap.git",
+            url: "https://github.com/swift-atoms/swift-memory.git",
             branch: "main"
         ),
         .package(
@@ -108,7 +108,7 @@ let package = Package(
                     name: "Storage Contiguous",
                     package: "swift-storage"
                 ),
-                .product(name: "Memory Heap", package: "swift-memory-heap"),
+                .product(name: "Memory", package: "swift-memory"),
                 .product(
                     name: "Memory Allocator Primitive",
                     package: "swift-memory-allocation"
@@ -152,7 +152,7 @@ let package = Package(
                     name: "Memory Allocator Primitive",
                     package: "swift-memory-allocation"
                 ),
-                .product(name: "Memory Heap", package: "swift-memory-heap"),
+                .product(name: "Memory", package: "swift-memory"),
                 .product(name: "Span Protocol", package: "swift-span"),
                 .product(
                     name: "Storage Contiguous",
