@@ -10,17 +10,14 @@ public import Index
 public import Tagged
 public import Memory_Small
 public import Memory_Allocator_Protocol
-public import Buffer_Protocol
-public import Store_Protocol
+public import Buffer
 public import Store
 public import Buffer_Linear_Primitive
-public import Buffer
 public import Hash_Indexed_Primitive
 public import Hash
 public import Memory_Allocator
 public import Memory
 public import Ownership
-public import Storage
 public import Storage
 
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {

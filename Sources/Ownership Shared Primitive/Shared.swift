@@ -10,9 +10,8 @@ public import Index
 public import Tagged
 public import Memory_Allocator_Protocol
 public import Store
-public import Buffer_Protocol
+public import Buffer
 public import Ownership
-public import Store_Protocol
 
 extension Ownership {
 

@@ -15,7 +15,7 @@ import Index
 import Memory_Allocator
 import Memory
 import Ownership_Shared_Primitive
-import Span_Protocol
+import Span
 import Storage
 import Testing
 

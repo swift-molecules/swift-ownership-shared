@@ -10,11 +10,9 @@ public import Index
 public import Tagged
 public import Memory_Small
 public import Memory_Allocator_Protocol
-public import Buffer_Protocol
-public import Store_Protocol
+public import Buffer
 public import Store
 public import Buffer_Linear_Primitive
-public import Buffer
 public import Memory_Allocator
 public import Memory
 public import Ownership

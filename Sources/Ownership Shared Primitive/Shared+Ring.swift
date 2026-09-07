@@ -10,10 +10,8 @@ public import Index
 public import Tagged
 public import Memory_Small
 public import Memory_Allocator_Protocol
-public import Buffer_Protocol
-public import Store_Protocol
-public import Store
 public import Buffer
+public import Store
 public import Buffer_Ring_Bounded_Primitive
 public import Buffer_Ring_Primitive
 public import Memory_Allocator

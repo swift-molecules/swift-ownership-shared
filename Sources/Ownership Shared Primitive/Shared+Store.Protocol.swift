@@ -9,10 +9,9 @@ public import Ordinal
 public import Ordinal_Tagged
 public import Tagged
 public import Store
-public import Buffer_Protocol
+public import Buffer
 public import Index
 public import Ownership
-public import Store_Protocol
 
 extension Ownership.Shared: Store.`Protocol` where Element: ~Copyable, B: ~Copyable {
 

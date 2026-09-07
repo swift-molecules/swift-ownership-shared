@@ -9,8 +9,7 @@ public import Ordinal
 public import Index
 public import Tagged
 public import Memory_Allocator_Protocol
-public import Buffer_Protocol
-public import Store_Protocol
+public import Buffer
 public import Store
 public import Ownership
 
