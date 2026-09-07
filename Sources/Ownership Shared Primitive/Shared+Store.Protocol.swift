@@ -16,33 +16,33 @@ public import Ownership
 extension Ownership.Shared: Store.`Protocol` where Element: ~Copyable, B: ~Copyable {
 
     @inlinable
-    public var capacity: Tagged<Element, Cardinal> { box.unguarded.capacity }
+    public var capacity: Tagged<Element, Cardinal> { unsafe box.unguarded.capacity }
 
     @inlinable
     public subscript(slot: Index<Element>) -> Element {
-        _read { yield box.unguarded[slot] }
+        _read { yield unsafe box.unguarded[slot] }
         _modify {
             ensureUnique()
-            yield &box.unguarded[slot]
+            yield unsafe &box.unguarded[slot]
         }
     }
 
     @inlinable
     public mutating func initialize(at slot: Index<Element>, to element: consuming Element) {
         ensureUnique()
-        box.unguarded.initialize(at: slot, to: element)
+        unsafe box.unguarded.initialize(at: slot, to: element)
     }
 
     @inlinable
     public mutating func move(at slot: Index<Element>) -> Element {
         ensureUnique()
-        return box.unguarded.move(at: slot)
+        return unsafe box.unguarded.move(at: slot)
     }
 
     @inlinable
     public mutating func swapAt(_ i: Index<Element>, _ j: Index<Element>) {
         ensureUnique()
-        box.unguarded.swapAt(i, j)
+        unsafe box.unguarded.swapAt(i, j)
     }
 
     @inlinable
@@ -54,5 +54,5 @@ extension Ownership.Shared: Store.`Protocol` where Element: ~Copyable, B: ~Copya
 extension Ownership.Shared: Buffer.`Protocol` where Element: ~Copyable, B: ~Copyable {
 
     @inlinable
-    public var count: Tagged<Element, Cardinal> { box.unguarded.count }
+    public var count: Tagged<Element, Cardinal> { unsafe box.unguarded.count }
 }

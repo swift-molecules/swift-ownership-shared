@@ -75,14 +75,14 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
         Element: Copyable
     {
         ensureUnique()
-        box.unguarded.append(element)
+        unsafe box.unguarded.append(element)
     }
 
     @inlinable
     public mutating func appendAssumingUnique(_ element: consuming Element)
     where B == Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Linear {
         assert(box.isUnique, "AssumingUnique on a shared box")
-        box.unguarded.append(element)
+        unsafe box.unguarded.append(element)
     }
 
     @inlinable
@@ -93,7 +93,7 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
         Element: Copyable
     {
         ensureUnique()
-        return box.unguarded.removeLast()
+        return unsafe box.unguarded.removeLast()
     }
 
     @inlinable
@@ -101,7 +101,7 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
         -> Element
     where B == Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Linear {
         assert(box.isUnique, "AssumingUnique on a shared box")
-        return box.unguarded.removeLast()
+        return unsafe box.unguarded.removeLast()
     }
 
     @inlinable
@@ -111,7 +111,7 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
         Element: Copyable
     {
         ensureUnique()
-        box.unguarded.reserveCapacity(minimumCapacity)
+        unsafe box.unguarded.reserveCapacity(minimumCapacity)
     }
 
     @inlinable
@@ -121,6 +121,6 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
         Element: Copyable
     {
         ensureUnique()
-        box.unguarded.reallocate(capacity: newCapacity)
+        unsafe box.unguarded.reallocate(capacity: newCapacity)
     }
 }

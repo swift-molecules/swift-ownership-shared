@@ -25,7 +25,7 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
         _ body: (Swift.Span<Element>) throws(Failure) -> R
     ) throws(Failure) -> R
     where B == Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Linear {
-        try Self._withSpan(box.unguarded, body)
+        try unsafe Self._withSpan(box.unguarded, body)
     }
 
     @inlinable
@@ -37,7 +37,7 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
         Element: Copyable
     {
         ensureUnique()
-        return try Self._withMutableSpan(&box.unguarded, body)
+        return try unsafe Self._withMutableSpan(&box.unguarded, body)
     }
 
     @inlinable
@@ -46,7 +46,7 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
     ) throws(Failure) -> R
     where B == Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Linear {
         assert(box.isUnique, "AssumingUnique on a shared box")
-        return try Self._withMutableSpan(&box.unguarded, body)
+        return try unsafe Self._withMutableSpan(&box.unguarded, body)
     }
 
     @inlinable

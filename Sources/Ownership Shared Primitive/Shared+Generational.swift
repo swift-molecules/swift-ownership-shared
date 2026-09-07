@@ -53,36 +53,36 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
     public mutating func insert(_ element: consuming Element) -> Store.Generational.Handle
     where B == Storage<Memory.Allocator<Memory.Heap>.Pool>.Generational<Element> {
         ensureUnique()
-        return box.unguarded.insert(element)
+        return unsafe box.unguarded.insert(element)
     }
 
     @inlinable
     public mutating func remove(_ handle: Store.Generational.Handle) -> Element?
     where B == Storage<Memory.Allocator<Memory.Heap>.Pool>.Generational<Element> {
         ensureUnique()
-        return box.unguarded.remove(handle)
+        return unsafe box.unguarded.remove(handle)
     }
 
     @inlinable
     public subscript(_ handle: Store.Generational.Handle) -> Element
     where B == Storage<Memory.Allocator<Memory.Heap>.Pool>.Generational<Element> {
-        _read { yield box.unguarded[handle] }
+        _read { yield unsafe box.unguarded[handle] }
         _modify {
             ensureUnique()
-            yield &box.unguarded[handle]
+            yield unsafe &box.unguarded[handle]
         }
     }
 
     @inlinable
     public func contains(_ handle: Store.Generational.Handle) -> Bool
     where B == Storage<Memory.Allocator<Memory.Heap>.Pool>.Generational<Element> {
-        box.unguarded.contains(handle)
+        unsafe box.unguarded.contains(handle)
     }
 
     @inlinable
     public mutating func grow(to slotCapacity: Tagged<Element, Cardinal>)
     where B == Storage<Memory.Allocator<Memory.Heap>.Pool>.Generational<Element> {
         ensureUnique()
-        box.unguarded.grow(to: slotCapacity)
+        unsafe box.unguarded.grow(to: slotCapacity)
     }
 }

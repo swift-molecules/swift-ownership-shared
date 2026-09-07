@@ -20,7 +20,7 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
         _ body: (inout B) throws(Failure) -> R
     ) throws(Failure) -> R {
         ensureUnique()
-        return try body(&box.unguarded)
+        return try unsafe body(&box.unguarded)
     }
 
     @inlinable
@@ -29,13 +29,13 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
         _ body: (inout B, consuming T) throws(Failure) -> R
     ) throws(Failure) -> R {
         ensureUnique()
-        return try body(&box.unguarded, payload)
+        return try unsafe body(&box.unguarded, payload)
     }
 
     @inlinable
     public func withColumn<R: ~Copyable, Failure: Swift.Error>(
         _ body: (borrowing B) throws(Failure) -> R
     ) throws(Failure) -> R {
-        try body(box.unguarded)
+        try unsafe body(box.unguarded)
     }
 }
