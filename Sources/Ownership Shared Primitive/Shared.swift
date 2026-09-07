@@ -11,7 +11,7 @@ public import Tagged
 public import Memory_Allocator_Protocol
 public import Store
 public import Buffer_Protocol
-public import Ownership_Box
+public import Ownership
 public import Store_Protocol
 
 extension Ownership {

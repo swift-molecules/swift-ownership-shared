@@ -12,7 +12,7 @@ public import Memory_Allocator_Protocol
 public import Buffer_Protocol
 public import Store_Protocol
 public import Store
-public import Ownership_Box
+public import Ownership
 public import Span_Protocol
 
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {

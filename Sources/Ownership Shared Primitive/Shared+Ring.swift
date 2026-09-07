@@ -18,7 +18,7 @@ public import Buffer_Ring_Bounded_Primitive
 public import Buffer_Ring_Primitive
 public import Memory_Allocator
 public import Memory
-public import Ownership_Box
+public import Ownership
 public import Storage
 
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {

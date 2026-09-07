@@ -19,7 +19,7 @@ public import Hash_Indexed_Primitive
 public import Hash
 public import Memory_Allocator
 public import Memory
-public import Ownership_Box
+public import Ownership
 public import Storage
 public import Storage
 

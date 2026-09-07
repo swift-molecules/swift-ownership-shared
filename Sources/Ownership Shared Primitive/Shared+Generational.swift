@@ -15,7 +15,7 @@ public import Store_Protocol
 public import Index
 public import Memory_Allocator
 public import Memory
-public import Ownership_Box
+public import Ownership
 public import Storage_Generational
 public import Storage
 public import Store
