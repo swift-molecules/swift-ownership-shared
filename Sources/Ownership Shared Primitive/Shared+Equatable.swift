@@ -1,5 +1,4 @@
-public import Cardinal_Standard_Library_Integration
-public import Cardinal_Carrier
+public import Cardinal
 public import Cardinal_Tagged
 public import Cardinal
 public import Ordinal_Protocol
@@ -10,9 +9,9 @@ public import Tagged
 public import Memory_Allocator_Protocol
 public import Buffer
 public import Store
-import Affine_Standard_Library_Integration
+import Affine
 public import Index
-import Ordinal_Standard_Library_Integration
+import Ordinal
 
 extension Ownership.Shared: Equatable where Element: Equatable, B: ~Copyable {
 

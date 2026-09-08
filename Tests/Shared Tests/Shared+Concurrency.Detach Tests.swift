@@ -1,9 +1,8 @@
-import Tagged_Standard_Library_Integration
+import Tagged
 import Ordinal_Cardinal
 import Ordinal_Tagged
 import Ordinal
-import Cardinal_Standard_Library_Integration
-import Cardinal_Carrier
+import Cardinal
 import Cardinal_Tagged
 import Cardinal
 import Tagged

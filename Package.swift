@@ -15,6 +15,7 @@ let package = Package(
         .library(name: "Ownership Shared Primitive", targets: ["Ownership Shared Primitive"])
     ],
     dependencies: [
+        .package(url: "https://github.com/swift-atoms/swift-cardinal.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-tagged.git", branch: "main"),
         .package(url: "https://github.com/swift-molecules/swift-memory-small.git", branch: "main"),
         .package(
@@ -83,8 +84,9 @@ let package = Package(
         .target(
             name: "Ownership Shared Primitive",
             dependencies: [
+                .product(name: "Cardinal", package: "swift-cardinal"),
                 .product(
-                    name: "Affine Standard Library Integration",
+                    name: "Affine",
                     package: "swift-affine"
                 ),
                 .product(name: "Buffer", package: "swift-buffer"),
@@ -121,7 +123,7 @@ let package = Package(
                 ),
                 .product(name: "Index", package: "swift-index"),
                 .product(
-                    name: "Ordinal Standard Library Integration",
+                    name: "Ordinal",
                     package: "swift-ordinal"
                 ),
                 .product(name: "Span", package: "swift-span"),
@@ -132,7 +134,8 @@ let package = Package(
         .testTarget(
             name: "Shared Tests",
             dependencies: [
-                .product(name: "Tagged Standard Library Integration", package: "swift-tagged"),
+                .product(name: "Cardinal", package: "swift-cardinal"),
+                .product(name: "Tagged", package: "swift-tagged"),
 
                 "Ownership Shared Primitive",
                 .product(name: "Buffer Linear", package: "swift-buffer-linear"),
