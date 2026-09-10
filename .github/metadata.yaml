@@ -1,4 +1,3 @@
-# .github/metadata.yaml
 description: "The copy-on-write column — Ownership.Shared<Element, B> wraps a column in a refcounted, CoW-checked backing for value-semantic sharing of move-only storage."
 topics:
   - molecules
