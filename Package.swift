@@ -47,10 +47,6 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-atoms/swift-hash.git",
-            branch: "main"
-        ),
-        .package(
             url: "https://github.com/swift-atoms/swift-storage.git",
             branch: "main"
         ),
@@ -108,7 +104,6 @@ let package = Package(
                     package: "swift-storage-generational"
                 ),
                 .product(name: "Hash Indexed Primitive", package: "swift-hash-table"),
-                .product(name: "Hash", package: "swift-hash"),
                 .product(name: "Store", package: "swift-store"),
                 .product(name: "Memory Small", package: "swift-memory-small"),
                 .product(name: "Storage", package: "swift-storage"),
