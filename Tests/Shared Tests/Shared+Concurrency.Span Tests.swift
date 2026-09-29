@@ -183,3 +183,18 @@ struct `Shared Concurrency Move Only Tests` {
         #expect(destroyed == created)
     }
 }
+
+@Suite
+struct `Shared Span Allocator Tests` {
+
+    @Test
+    func `span access works on a heap-backed column`() {
+        typealias Column = Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Int>>.Linear
+        var shared = Ownership.Shared<Int, Column>(Column(minimumCapacity: Tagged<Int, Cardinal>(4)))
+        shared.append(5)
+        shared.append(6)
+        shared.withMutableSpan { span in span[0] = 50 }
+        let sum = shared.withSpan { span in span[0] &+ span[1] }
+        #expect(sum == 56)
+    }
+}
