@@ -17,7 +17,6 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/swift-atoms/swift-cardinal.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-tagged.git", branch: "main"),
-        .package(url: "https://github.com/swift-molecules/swift-memory-small.git", branch: "main"),
         .package(
             url: "https://github.com/swift-atoms/swift-store.git",
             branch: "main"
@@ -39,25 +38,19 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-storage-generational.git",
-            branch: "main"
-        ),
-        .package(
             url: "https://github.com/swift-molecules/swift-hash-table.git",
             branch: "main"
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-storage.git",
-            branch: "main"
-        ),
+            branch: "main", traits: ["Generational", "Memory"]),
         .package(
             url: "https://github.com/swift-atoms/swift-memory.git",
             branch: "main"
         ),
         .package(
             url: "https://github.com/swift-molecules/swift-memory-allocation.git",
-            branch: "main"
-        ),
+            branch: "main", traits: ["MemorySmall"]),
         .package(
             url: "https://github.com/swift-atoms/swift-index.git",
             branch: "main"
@@ -74,6 +67,8 @@ let package = Package(
             url: "https://github.com/swift-atoms/swift-ordinal.git",
             branch: "main"
         ),
+        .package(url: "https://github.com/swift-atoms/swift-carrier.git", branch: "main"),
+        .package(url: "https://github.com/swift-atoms/swift-property.git", branch: "main"),
     ],
     targets: [
 
@@ -99,13 +94,9 @@ let package = Package(
                     name: "Buffer Ring Bounded Primitive",
                     package: "swift-buffer-ring"
                 ),
-                .product(
-                    name: "Storage Generational",
-                    package: "swift-storage-generational"
-                ),
                 .product(name: "Hash Indexed Primitive", package: "swift-hash-table"),
+                .product(name: "Hash Table Primitive", package: "swift-hash-table"),
                 .product(name: "Store", package: "swift-store"),
-                .product(name: "Memory Small", package: "swift-memory-small"),
                 .product(name: "Storage", package: "swift-storage"),
                 .product(name: "Memory", package: "swift-memory"),
                 .product(
@@ -123,6 +114,10 @@ let package = Package(
                 ),
                 .product(name: "Span", package: "swift-span"),
                 .product(name: "Ownership", package: "swift-ownership"),
+                .product(name: "Carrier", package: "swift-carrier"),
+                .product(name: "Property", package: "swift-property"),
+                .product(name: "Tagged", package: "swift-tagged"),
+                .product(name: "Memory Small", package: "swift-memory-allocation"),
             ]
         ),
 
@@ -164,8 +159,13 @@ let package = Package(
                 .product(name: "Memory", package: "swift-memory"),
                 .product(name: "Span", package: "swift-span"),
                 .product(name: "Storage", package: "swift-storage"),
+                .product(name: "Carrier", package: "swift-carrier"),
+                .product(name: "Ordinal", package: "swift-ordinal"),
+                .product(name: "Property", package: "swift-property"),
             ]
         ),
+
+        .testTarget(name: "Ownership Shared Decision Column Integration Tests", dependencies: [.target(name: "Ownership Shared Primitive"), .product(name: "Buffer Linear", package: "swift-buffer-linear"), .product(name: "Buffer", package: "swift-buffer"), .product(name: "Storage", package: "swift-storage"), .product(name: "Memory Allocator", package: "swift-memory-allocation"), .product(name: "Memory", package: "swift-memory"), .product(name: "Index", package: "swift-index"), .product(name: "Tagged", package: "swift-tagged"), .product(name: "Cardinal", package: "swift-cardinal")], path: "Tests/Ownership Shared Decision Column Integration Tests"),
     ],
     swiftLanguageModes: [.v6]
 )

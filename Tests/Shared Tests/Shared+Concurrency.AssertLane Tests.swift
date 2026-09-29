@@ -1,11 +1,8 @@
 import Tagged
-import Ordinal_Cardinal
-import Ordinal_Tagged
+import Cardinal
+import Carrier
 import Ordinal
-import Cardinal
-import Cardinal_Tagged
-import Cardinal
-import Tagged
+import Property
 public import Memory_Small
 #if DEBUG
 
@@ -29,6 +26,7 @@ public import Memory_Small
     @Suite
     struct `Shared Assert Lane Death Tests` {
 
+#if os(macOS) || os(Linux) || os(Windows)
         @Test
         func `appendAssumingUnique on a shared box dies in debug`() async {
             await #expect(processExitsWith: .failure) {
@@ -39,7 +37,9 @@ public import Memory_Small
                 _ = b
             }
         }
+#endif
 
+#if os(macOS) || os(Linux) || os(Windows)
         @Test
         func `removeLastAssumingUnique on a shared box dies in debug`() async {
             await #expect(processExitsWith: .failure) {
@@ -50,7 +50,9 @@ public import Memory_Small
                 _ = b
             }
         }
+#endif
 
+#if os(macOS) || os(Linux) || os(Windows)
         @Test
         func `withMutableSpanAssumingUnique on a shared box dies in debug`() async {
             await #expect(processExitsWith: .failure) {
@@ -63,6 +65,7 @@ public import Memory_Small
                 _ = b
             }
         }
+#endif
 
         @Test
         func `assumingUnique spellings succeed on a truly unique box`() {

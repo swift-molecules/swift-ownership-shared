@@ -1,12 +1,9 @@
 public import Cardinal
-public import Cardinal_Tagged
-public import Cardinal
-public import Ordinal_Protocol
-public import Ordinal_Cardinal
-public import Ordinal_Tagged
-public import Ordinal
-public import Index
 public import Tagged
+public import Carrier
+public import Ordinal
+public import Property
+public import Index
 public import Memory_Small
 public import Memory_Allocator_Protocol
 public import Buffer
@@ -21,20 +18,20 @@ public import Storage
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 
     @inlinable
-    public init(
-        _ buffer: consuming Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Ring
+    public init<Resource: Memory.Growable & ~Copyable>(
+        _ buffer: consuming Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Ring
     )
-    where B == Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Ring {
+    where B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Ring {
         self.init(box: Ownership.Box(buffer, drain: { $0.removeAll() }))
     }
 
     @inlinable
-    public init(
+    public init<Resource: Memory.Growable & ~Copyable>(
         _ buffer:
-            consuming Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Ring
+            consuming Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Ring
             .Bounded
     )
-    where B == Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Ring.Bounded {
+    where B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Ring.Bounded {
         self.init(box: Ownership.Box(buffer, drain: { $0.remove.all() }))
     }
 }
@@ -42,10 +39,10 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 extension Ownership.Shared where Element: Copyable, B: ~Copyable {
 
     @inlinable
-    public init(
-        _ buffer: consuming Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Ring
+    public init<Resource: Memory.Growable & ~Copyable>(
+        _ buffer: consuming Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Ring
     )
-    where B == Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Ring {
+    where B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Ring {
         self.init(
             box: Ownership.Box(
                 buffer,
@@ -56,12 +53,12 @@ extension Ownership.Shared where Element: Copyable, B: ~Copyable {
     }
 
     @inlinable
-    public init(
+    public init<Resource: Memory.Growable & ~Copyable>(
         _ buffer:
-            consuming Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Ring
+            consuming Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Ring
             .Bounded
     )
-    where B == Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Ring.Bounded {
+    where B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Ring.Bounded {
         self.init(
             box: Ownership.Box(
                 buffer,

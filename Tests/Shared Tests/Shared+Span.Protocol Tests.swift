@@ -1,11 +1,8 @@
 import Tagged
-import Ordinal_Cardinal
-import Ordinal_Tagged
+import Cardinal
+import Carrier
 import Ordinal
-import Cardinal
-import Cardinal_Tagged
-import Cardinal
-import Tagged
+import Property
 public import Memory_Small
 import Buffer_Linear_Primitive
 import Buffer_Linear

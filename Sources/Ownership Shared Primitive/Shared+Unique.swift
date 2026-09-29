@@ -1,12 +1,9 @@
 public import Cardinal
-public import Cardinal_Tagged
-public import Cardinal
-public import Ordinal_Protocol
-public import Ordinal_Cardinal
-public import Ordinal_Tagged
-public import Ordinal
-public import Index
 public import Tagged
+public import Carrier
+public import Ordinal
+public import Property
+public import Index
 public import Memory_Small
 public import Memory_Allocator_Protocol
 public import Buffer
@@ -20,11 +17,11 @@ public import Storage
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 
     @inlinable
-    public init(
+    public init<Resource: Memory.Growable & ~Copyable>(
         _ buffer:
-            consuming Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Linear
+            consuming Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear
     )
-    where B == Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Linear {
+    where B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear {
         self.init(box: Ownership.Box(buffer, drain: { $0.removeAll(keepingCapacity: true) }))
     }
 }
@@ -32,11 +29,11 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 extension Ownership.Shared where Element: Copyable, B: ~Copyable {
 
     @inlinable
-    public init(
+    public init<Resource: Memory.Growable & ~Copyable>(
         _ buffer:
-            consuming Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Linear
+            consuming Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear
     )
-    where B == Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Linear {
+    where B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear {
         self.init(
             box: Ownership.Box(
                 buffer,
@@ -68,9 +65,9 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 
     @inlinable
-    public mutating func append(_ element: consuming Element)
+    public mutating func append<Resource: Memory.Growable & ~Copyable>(_ element: consuming Element)
     where
-        B == Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Linear,
+        B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear,
         Element: Copyable
     {
         ensureUnique()
@@ -78,17 +75,17 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
     }
 
     @inlinable
-    public mutating func appendAssumingUnique(_ element: consuming Element)
-    where B == Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Linear {
+    public mutating func appendAssumingUnique<Resource: Memory.Growable & ~Copyable>(_ element: consuming Element)
+    where B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear {
         assert(box.isUnique, "AssumingUnique on a shared box")
         unsafe box.unguarded.append(element)
     }
 
     @inlinable
-    public mutating func removeLast()
+    public mutating func removeLast<Resource: Memory.Growable & ~Copyable>()
         -> Element
     where
-        B == Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Linear,
+        B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear,
         Element: Copyable
     {
         ensureUnique()
@@ -96,17 +93,17 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
     }
 
     @inlinable
-    public mutating func removeLastAssumingUnique()
+    public mutating func removeLastAssumingUnique<Resource: Memory.Growable & ~Copyable>()
         -> Element
-    where B == Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Linear {
+    where B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear {
         assert(box.isUnique, "AssumingUnique on a shared box")
         return unsafe box.unguarded.removeLast()
     }
 
     @inlinable
-    public mutating func reserveCapacity(_ minimumCapacity: Tagged<Element, Cardinal>)
+    public mutating func reserveCapacity<Resource: Memory.Growable & ~Copyable>(_ minimumCapacity: Tagged<Element, Cardinal>)
     where
-        B == Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Linear,
+        B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear,
         Element: Copyable
     {
         ensureUnique()
@@ -114,9 +111,9 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
     }
 
     @inlinable
-    public mutating func reallocate(capacity newCapacity: Tagged<Element, Cardinal>)
+    public mutating func reallocate<Resource: Memory.Growable & ~Copyable>(capacity newCapacity: Tagged<Element, Cardinal>)
     where
-        B == Buffer<Storage<Memory.Allocator<Memory.Small<0>>>.Contiguous<Element>>.Linear,
+        B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear,
         Element: Copyable
     {
         ensureUnique()
