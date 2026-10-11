@@ -3,7 +3,7 @@ import Cardinal
 import Carrier
 import Ordinal
 import Property
-public import Memory_Small
+import Memory_Small
 #if DEBUG
 
     import Ownership_Shared_Primitive

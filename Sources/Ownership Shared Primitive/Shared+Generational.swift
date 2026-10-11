@@ -1,14 +1,14 @@
 public import Memory_Allocator_Pool
 public import Cardinal
 public import Tagged
-public import Carrier
-public import Ordinal
-public import Property
-public import Memory_Small
-public import Memory_Allocator_Protocol
-public import Buffer
+import Carrier
+import Ordinal
+import Property
+import Memory_Small
+import Memory_Allocator_Protocol
+import Buffer
 public import Store
-public import Index
+import Index
 public import Memory_Allocator
 public import Memory
 public import Ownership

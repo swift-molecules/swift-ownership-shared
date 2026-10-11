@@ -1,9 +1,9 @@
 public import Cardinal
-public import Carrier
-public import Ordinal
+import Carrier
+import Ordinal
 public import Tagged
-public import Memory_Allocator_Protocol
-public import Property
+import Memory_Allocator_Protocol
+import Property
 public import Store
 public import Buffer
 public import Index

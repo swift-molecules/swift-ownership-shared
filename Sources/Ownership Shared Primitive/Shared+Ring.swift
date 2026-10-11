@@ -1,13 +1,13 @@
-public import Cardinal
-public import Tagged
-public import Carrier
-public import Ordinal
-public import Property
-public import Index
-public import Memory_Small
+import Cardinal
+import Tagged
+import Carrier
+import Ordinal
+import Property
+import Index
+import Memory_Small
 public import Memory_Allocator_Protocol
 public import Buffer
-public import Store
+import Store
 public import Buffer_Ring_Bounded_Primitive
 public import Buffer_Ring_Primitive
 public import Memory_Allocator
@@ -18,7 +18,7 @@ public import Storage
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 
     @inlinable
-    public init<Resource: Memory.Growable & ~Copyable>(
+    public init<Resource: Memory.Growable & SendableMetatype & ~Copyable>(
         _ buffer: consuming Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Ring
     )
     where B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Ring {
@@ -26,7 +26,7 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
     }
 
     @inlinable
-    public init<Resource: Memory.Growable & ~Copyable>(
+    public init<Resource: Memory.Growable & SendableMetatype & ~Copyable>(
         _ buffer:
             consuming Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Ring
             .Bounded
@@ -39,7 +39,7 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 extension Ownership.Shared where Element: Copyable, B: ~Copyable {
 
     @inlinable
-    public init<Resource: Memory.Growable & ~Copyable>(
+    public init<Resource: Memory.Growable & SendableMetatype & ~Copyable>(
         _ buffer: consuming Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Ring
     )
     where B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Ring {
@@ -53,7 +53,7 @@ extension Ownership.Shared where Element: Copyable, B: ~Copyable {
     }
 
     @inlinable
-    public init<Resource: Memory.Growable & ~Copyable>(
+    public init<Resource: Memory.Growable & SendableMetatype & ~Copyable>(
         _ buffer:
             consuming Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Ring
             .Bounded

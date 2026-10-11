@@ -1,10 +1,10 @@
-public import Cardinal
-public import Tagged
-public import Carrier
-public import Ordinal
-public import Property
-public import Index
-public import Memory_Allocator_Protocol
-public import Buffer
-public import Store
+import Cardinal
+import Tagged
+import Carrier
+import Ordinal
+import Property
+import Index
+import Memory_Allocator_Protocol
+import Buffer
+import Store
 @_exported public import Ownership

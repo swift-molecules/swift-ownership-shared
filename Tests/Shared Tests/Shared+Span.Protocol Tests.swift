@@ -3,7 +3,7 @@ import Cardinal
 import Carrier
 import Ordinal
 import Property
-public import Memory_Small
+import Memory_Small
 import Buffer_Linear_Primitive
 import Buffer_Linear
 import Buffer

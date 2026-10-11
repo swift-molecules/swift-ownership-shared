@@ -1,13 +1,13 @@
-public import Cardinal
-public import Tagged
-public import Carrier
-public import Ordinal
-public import Property
-public import Index
-public import Memory_Small
+import Cardinal
+import Tagged
+import Carrier
+import Ordinal
+import Property
+import Index
+import Memory_Small
 public import Memory_Allocator_Protocol
 public import Buffer
-public import Store
+import Store
 public import Buffer_Linear_Primitive
 public import Hash_Indexed_Primitive
 public import Hash_Table_Primitive
@@ -19,7 +19,7 @@ public import Storage
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 
     @inlinable
-    public init<Resource: Memory.Growable & ~Copyable>(
+    public init<Resource: Memory.Growable & SendableMetatype & ~Copyable>(
         _ column:
             consuming Hash.Indexed<
                 Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear
@@ -28,7 +28,7 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
     where
         B == Hash.Indexed<
             Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear
-        >, Element: Swift.Hashable & SendableMetatype
+        >, Element: Swift::Hashable & SendableMetatype
     {
         self.init(box: Ownership.Box(column, drain: { $0.removeAll(keepingCapacity: true) }))
     }
@@ -37,7 +37,7 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 extension Ownership.Shared where Element: Copyable, B: ~Copyable {
 
     @inlinable
-    public init<Resource: Memory.Growable & ~Copyable>(
+    public init<Resource: Memory.Growable & SendableMetatype & ~Copyable>(
         _ column:
             consuming Hash.Indexed<
                 Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear
@@ -46,7 +46,7 @@ extension Ownership.Shared where Element: Copyable, B: ~Copyable {
     where
         B == Hash.Indexed<
             Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear
-        >, Element: Swift.Hashable & SendableMetatype
+        >, Element: Swift::Hashable & SendableMetatype
     {
         self.init(
             box: Ownership.Box(

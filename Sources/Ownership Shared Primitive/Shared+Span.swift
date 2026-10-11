@@ -1,12 +1,12 @@
-public import Cardinal
-public import Tagged
-public import Carrier
-public import Ordinal
-public import Property
-public import Index
-public import Memory_Allocator_Protocol
+import Cardinal
+import Tagged
+import Carrier
+import Ordinal
+import Property
+import Index
+import Memory_Allocator_Protocol
 public import Buffer
-public import Store
+import Store
 public import Buffer_Linear_Primitive
 public import Memory_Allocator
 public import Memory
@@ -16,16 +16,16 @@ public import Storage
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 
     @inlinable
-    public func withSpan<Resource: Memory.Region & ~Copyable, R, Failure: Swift.Error>(
-        _ body: (Swift.Span<Element>) throws(Failure) -> R
+    public func withSpan<Resource: Memory.Region & ~Copyable, R, Failure: Swift::Error>(
+        _ body: (Swift::Span<Element>) throws(Failure) -> R
     ) throws(Failure) -> R
     where B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear {
         try unsafe Self._withSpan(box.unguarded, body)
     }
 
     @inlinable
-    public mutating func withMutableSpan<Resource: Memory.Region & ~Copyable, R, Failure: Swift.Error>(
-        _ body: (inout Swift.MutableSpan<Element>) throws(Failure) -> R
+    public mutating func withMutableSpan<Resource: Memory.Region & ~Copyable, R, Failure: Swift::Error>(
+        _ body: (inout Swift::MutableSpan<Element>) throws(Failure) -> R
     ) throws(Failure) -> R
     where
         B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear,
@@ -36,8 +36,8 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
     }
 
     @inlinable
-    public mutating func withMutableSpanAssumingUnique<Resource: Memory.Region & ~Copyable, R, Failure: Swift.Error>(
-        _ body: (inout Swift.MutableSpan<Element>) throws(Failure) -> R
+    public mutating func withMutableSpanAssumingUnique<Resource: Memory.Region & ~Copyable, R, Failure: Swift::Error>(
+        _ body: (inout Swift::MutableSpan<Element>) throws(Failure) -> R
     ) throws(Failure) -> R
     where B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear {
         assert(box.isUnique, "AssumingUnique on a shared box")
@@ -45,18 +45,18 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
     }
 
     @inlinable
-    package static func _withSpan<Resource: Memory.Region & ~Copyable, R, Failure: Swift.Error>(
+    package static func _withSpan<Resource: Memory.Region & ~Copyable, R, Failure: Swift::Error>(
         _ buffer:
             borrowing Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear,
-        _ body: (Swift.Span<Element>) throws(Failure) -> R
+        _ body: (Swift::Span<Element>) throws(Failure) -> R
     ) throws(Failure) -> R {
         try body(buffer.span)
     }
 
     @inlinable
-    package static func _withMutableSpan<Resource: Memory.Region & ~Copyable, R, Failure: Swift.Error>(
+    package static func _withMutableSpan<Resource: Memory.Region & ~Copyable, R, Failure: Swift::Error>(
         _ buffer: inout Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear,
-        _ body: (inout Swift.MutableSpan<Element>) throws(Failure) -> R
+        _ body: (inout Swift::MutableSpan<Element>) throws(Failure) -> R
     ) throws(Failure) -> R {
         var span = buffer.mutableSpan()
         return try body(&span)

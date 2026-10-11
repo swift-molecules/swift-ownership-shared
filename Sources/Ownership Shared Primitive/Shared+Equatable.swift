@@ -1,14 +1,13 @@
 public import Cardinal
 public import Tagged
-public import Carrier
+import Carrier
 public import Ordinal
-public import Property
-public import Memory_Allocator_Protocol
-public import Buffer
-public import Store
+import Property
+import Memory_Allocator_Protocol
+import Buffer
+import Store
 import Affine
 public import Index
-import Ordinal
 
 extension Ownership.Shared: Equatable where Element: Equatable, B: ~Copyable {
 

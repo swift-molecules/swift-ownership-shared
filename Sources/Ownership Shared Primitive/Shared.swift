@@ -1,10 +1,10 @@
-public import Cardinal
-public import Tagged
-public import Carrier
-public import Ordinal
-public import Property
-public import Index
-public import Memory_Allocator_Protocol
+import Cardinal
+import Tagged
+import Carrier
+import Ordinal
+import Property
+import Index
+import Memory_Allocator_Protocol
 public import Store
 public import Buffer
 public import Ownership
@@ -24,10 +24,12 @@ extension Ownership {
         internal init(box: consuming Ownership.Box<B>) {
             self.box = box
         }
-
-        @usableFromInline
-        package var _boxID: ObjectIdentifier { box.identity }
     }
+}
+
+extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
+    @usableFromInline
+    package var _boxID: ObjectIdentifier { box.identity }
 }
 
 extension Ownership.Shared: Copyable where Element: Copyable, B: ~Copyable {}

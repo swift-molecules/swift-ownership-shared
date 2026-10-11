@@ -1,12 +1,12 @@
-public import Cardinal
-public import Tagged
-public import Carrier
-public import Ordinal
-public import Property
-public import Index
-public import Memory_Allocator_Protocol
+import Cardinal
+import Tagged
+import Carrier
+import Ordinal
+import Property
+import Index
+import Memory_Allocator_Protocol
 public import Buffer
-public import Store
+import Store
 public import Ownership
 public import Span
 
@@ -25,7 +25,7 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 extension Ownership.Shared: Span.`Protocol` where B: Span.`Protocol`, B: ~Copyable {
 
     @inlinable
-    public var span: Swift.Span<Element> {
+    public var span: Swift::Span<Element> {
         @_lifetime(borrow self)
         borrowing get {
             let raw = unsafe Self._window(of: box.unguarded)
@@ -33,7 +33,7 @@ extension Ownership.Shared: Span.`Protocol` where B: Span.`Protocol`, B: ~Copyab
                 unsafe (raw.base?.assumingMemoryBound(to: Element.self))
                 ?? UnsafePointer<Element>(bitPattern: MemoryLayout<Element>.alignment)
                 .unsafelyUnwrapped
-            let laundered = unsafe Swift.Span(
+            let laundered = unsafe Swift::Span(
                 _unsafeStart: typed,
                 count: raw.base == nil ? 0 : raw.count
             )
