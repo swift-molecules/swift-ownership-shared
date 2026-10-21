@@ -1,9 +1,10 @@
-import Tagged
 import Cardinal
 import Carrier
+import Memory_Small
 import Ordinal
 import Property
-import Memory_Small
+import Tagged
+
 #if DEBUG
 
     import Ownership_Shared_Primitive
@@ -26,46 +27,46 @@ import Memory_Small
     @Suite
     struct `Shared Assert Lane Death Tests` {
 
-#if os(macOS) || os(Linux) || os(Windows)
-        @Test
-        func `appendAssumingUnique on a shared box dies in debug`() async {
-            await #expect(processExitsWith: .failure) {
-                var a: SharedColumn<Int> = makeShared(capacity: 4)
-                a.append(1)
-                let b = a
-                a.appendAssumingUnique(2)
-                _ = b
-            }
-        }
-#endif
-
-#if os(macOS) || os(Linux) || os(Windows)
-        @Test
-        func `removeLastAssumingUnique on a shared box dies in debug`() async {
-            await #expect(processExitsWith: .failure) {
-                var a: SharedColumn<Int> = makeShared(capacity: 4)
-                a.append(1)
-                let b = a
-                _ = a.removeLastAssumingUnique()
-                _ = b
-            }
-        }
-#endif
-
-#if os(macOS) || os(Linux) || os(Windows)
-        @Test
-        func `withMutableSpanAssumingUnique on a shared box dies in debug`() async {
-            await #expect(processExitsWith: .failure) {
-                var a: SharedColumn<Int> = makeShared(capacity: 4)
-                a.append(1)
-                let b = a
-                a.withMutableSpanAssumingUnique { span in
-                    span[0] = 99
+        #if os(macOS) || os(Linux) || os(Windows)
+            @Test
+            func `appendAssumingUnique on a shared box dies in debug`() async {
+                await #expect(processExitsWith: .failure) {
+                    var a: SharedColumn<Int> = makeShared(capacity: 4)
+                    a.append(1)
+                    let b = a
+                    a.appendAssumingUnique(2)
+                    _ = b
                 }
-                _ = b
             }
-        }
-#endif
+        #endif
+
+        #if os(macOS) || os(Linux) || os(Windows)
+            @Test
+            func `removeLastAssumingUnique on a shared box dies in debug`() async {
+                await #expect(processExitsWith: .failure) {
+                    var a: SharedColumn<Int> = makeShared(capacity: 4)
+                    a.append(1)
+                    let b = a
+                    _ = a.removeLastAssumingUnique()
+                    _ = b
+                }
+            }
+        #endif
+
+        #if os(macOS) || os(Linux) || os(Windows)
+            @Test
+            func `withMutableSpanAssumingUnique on a shared box dies in debug`() async {
+                await #expect(processExitsWith: .failure) {
+                    var a: SharedColumn<Int> = makeShared(capacity: 4)
+                    a.append(1)
+                    let b = a
+                    a.withMutableSpanAssumingUnique { span in
+                        span[0] = 99
+                    }
+                    _ = b
+                }
+            }
+        #endif
 
         @Test
         func `assumingUnique spellings succeed on a truly unique box`() {

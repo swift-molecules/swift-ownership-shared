@@ -1,18 +1,18 @@
-public import Memory_Allocator_Pool
-public import Cardinal
-public import Tagged
-import Carrier
-import Ordinal
-import Property
-import Memory_Small
-import Memory_Allocator_Protocol
 import Buffer
-public import Store
+public import Cardinal
+import Carrier
 import Index
-public import Memory_Allocator
 public import Memory
+public import Memory_Allocator
+public import Memory_Allocator_Pool
+import Memory_Allocator_Protocol
+import Memory_Small
+import Ordinal
 public import Ownership
+import Property
 public import Storage
+public import Store
+public import Tagged
 
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 

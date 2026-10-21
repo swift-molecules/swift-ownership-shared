@@ -1,13 +1,13 @@
+public import Buffer
 import Cardinal
-import Tagged
 import Carrier
-import Ordinal
-import Property
 import Index
 import Memory_Allocator_Protocol
-public import Store
-public import Buffer
+import Ordinal
 public import Ownership
+import Property
+public import Store
+import Tagged
 
 extension Ownership {
 

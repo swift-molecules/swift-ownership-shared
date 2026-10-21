@@ -1,18 +1,18 @@
-import Tagged
-import Cardinal
-import Carrier
-import Ordinal
-import Property
-import Memory_Small
 import Buffer
-import Buffer_Test_Support
 import Buffer_Ring_Bounded_Primitive
 import Buffer_Ring_Primitive
+import Buffer_Test_Support
+import Cardinal
+import Carrier
 import Index
-import Memory_Allocator
 import Memory
+import Memory_Allocator
+import Memory_Small
+import Ordinal
 import Ownership_Shared_Primitive
+import Property
 import Storage
+import Tagged
 import Testing
 
 private typealias HeapStorage<E: ~Copyable> =

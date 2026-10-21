@@ -1,13 +1,13 @@
+public import Buffer
 public import Cardinal
 import Carrier
-import Ordinal
-public import Tagged
+public import Index
 import Memory_Allocator_Protocol
+import Ordinal
+public import Ownership
 import Property
 public import Store
-public import Buffer
-public import Index
-public import Ownership
+public import Tagged
 
 extension Ownership.Shared: Store.`Protocol` where Element: ~Copyable, B: ~Copyable {
 

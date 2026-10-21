@@ -1,14 +1,14 @@
+public import Buffer
 import Cardinal
-import Tagged
 import Carrier
-import Ordinal
-import Property
 import Index
 import Memory_Allocator_Protocol
-public import Buffer
-import Store
+import Ordinal
 public import Ownership
+import Property
 public import Span
+import Store
+import Tagged
 
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 

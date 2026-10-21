@@ -1,18 +1,18 @@
-import Tagged
-import Cardinal
-import Carrier
-import Ordinal
-import Property
-import Memory_Small
+import Buffer
 import Buffer_Linear_Bounded_Primitive
 import Buffer_Linear_Primitive
-import Buffer
+import Cardinal
+import Carrier
 import Index
-import Memory_Allocator
 import Memory
+import Memory_Allocator
+import Memory_Small
+import Ordinal
 import Ownership_Shared_Primitive
+import Property
 import Storage
 import Synchronization
+import Tagged
 import Testing
 
 private typealias HeapColumn<E: ~Copyable> =

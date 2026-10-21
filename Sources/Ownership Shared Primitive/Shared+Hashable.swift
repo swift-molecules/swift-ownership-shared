@@ -1,13 +1,13 @@
+import Affine
+import Buffer
 public import Cardinal
-public import Tagged
 import Carrier
+public import Index
+import Memory_Allocator_Protocol
 public import Ordinal
 import Property
-import Memory_Allocator_Protocol
-import Buffer
 import Store
-import Affine
-public import Index
+public import Tagged
 
 extension Ownership.Shared: Hashable where Element: Hashable, B: ~Copyable {
 
