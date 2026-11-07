@@ -54,7 +54,7 @@ struct `Shared Concurrency Detach Trivial Tests` {
     @Test(arguments: [2, 8, 32])
     func `concurrent mutate-detach: every sibling matches its forked model`(width: Int) async {
         var proto: SharedColumn<Int> = makeShared(capacity: 16)
-        for i in 0..<8 { proto.append(i) }
+        (0..<8).forEach { i in proto.append(i) }
         let frozen = proto
         let outcomes = await withTaskGroup(of: (Int, [Int]).self, returning: [Int: [Int]].self) {
             group in
@@ -80,7 +80,7 @@ struct `Shared Concurrency Detach Trivial Tests` {
             return collected
         }
         #expect(outcomes.count == width)
-        for t in 0..<width {
+        (0..<width).forEach { t in
             var model = Array(0..<8)
             model.append(100 &+ t)
             model = model.map { $0 &+ t }
@@ -132,7 +132,7 @@ struct `Shared Concurrency Detach Teardown Tests` {
         Ledger.reset()
         do {
             var proto: SharedColumn<Payload> = makeShared(capacity: 16)
-            for i in 0..<8 { proto.append(Payload(i)) }
+            (0..<8).forEach { i in proto.append(Payload(i)) }
             let frozen = proto
             let checks = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
                 for t in 0..<16 {

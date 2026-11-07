@@ -50,7 +50,7 @@ struct `Shared Concurrency Storm Tests` {
     @Test
     func `readers stay on the seed while writers detach away`() async {
         var proto: SharedColumn<Int> = makeShared(capacity: 8)
-        for i in 0..<4 { proto.append(i &* 10) }
+        (0..<4).forEach { i in proto.append(i &* 10) }
         let frozen = proto
         let outcomes = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
             for _ in 0..<8 {
@@ -94,7 +94,7 @@ struct `Shared Concurrency Storm Tests` {
         width: Int
     ) async {
         var proto: SharedColumn<Int> = makeShared(capacity: 8)
-        for i in 0..<4 { proto.append(i) }
+        (0..<4).forEach { i in proto.append(i) }
         let frozen = proto
         let outcomes = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
             for t in 0..<width {
@@ -155,7 +155,7 @@ struct `Shared Concurrency Storm Teardown Tests` {
         Ledger.reset()
         do {
             var proto: SharedColumn<Payload> = makeShared(capacity: 8)
-            for i in 0..<4 { proto.append(Payload(i)) }
+            (0..<4).forEach { i in proto.append(Payload(i)) }
             let frozen = proto
             let outcomes = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
 
