@@ -28,48 +28,52 @@ private func total<S: Span.`Protocol`>(_ s: borrowing S) -> Int where S.Element 
     return sum
 }
 
-@Suite(.serialized)
-struct `Shared Span Protocol Tests` {
+enum `Shared+Span.Protocol Tests` {}
 
-    @Test
-    func `the laundered span reads the boxed column, directly and via the witness`() {
-        var column = HeapColumn<Int>(minimumCapacity: Tagged<Int, Cardinal>(4))
-        column.append(1)
-        column.append(2)
-        column.append(3)
-        let s = SharedColumn<Int>(column)
-        let direct = s.span
-        #expect(direct.count == 3)
-        var sum = 0
-        for i in direct.indices { sum &+= direct[i] }
-        #expect(sum == 6)
-        #expect(total(s) == 6)
-    }
+extension `Shared+Span.Protocol Tests` {
+    @Suite(.serialized)
+    struct `Shared Span Protocol Tests` {
 
-    @Test
-    func `the empty column vends the lawful empty window`() {
-        let s = SharedColumn<Int>(HeapColumn<Int>(minimumCapacity: Tagged<Int, Cardinal>(2)))
-        let span = s.span
-        #expect(span.count == 0)
-        #expect(total(s) == 0)
-    }
+        @Test
+        func `the laundered span reads the boxed column, directly and via the witness`() {
+            var column = HeapColumn<Int>(minimumCapacity: Tagged<Int, Cardinal>(4))
+            column.append(1)
+            column.append(2)
+            column.append(3)
+            let s = SharedColumn<Int>(column)
+            let direct = s.span
+            #expect(direct.count == 3)
+            var sum = 0
+            for i in direct.indices { sum &+= direct[i] }
+            #expect(sum == 6)
+            #expect(total(s) == 6)
+        }
 
-    @Test
-    func `a live span survives a sibling's gated detach-mutation unchanged`() {
-        var column = HeapColumn<Int>(minimumCapacity: Tagged<Int, Cardinal>(4))
-        column.append(1)
-        column.append(2)
-        column.append(3)
-        let s = SharedColumn<Int>(column)
-        var sibling = s
-        let live = s.span
-        sibling.append(99)
-        var after = 0
-        for i in live.indices { after &+= live[i] }
-        #expect(after == 6)
-        let siblingCount = sibling.count
-        #expect(siblingCount == Tagged<Int, Cardinal>(4))
-        let ourCount = s.count
-        #expect(ourCount == Tagged<Int, Cardinal>(3))
+        @Test
+        func `the empty column vends the lawful empty window`() {
+            let s = SharedColumn<Int>(HeapColumn<Int>(minimumCapacity: Tagged<Int, Cardinal>(2)))
+            let span = s.span
+            #expect(span.count == 0)
+            #expect(total(s) == 0)
+        }
+
+        @Test
+        func `a live span survives a sibling's gated detach-mutation unchanged`() {
+            var column = HeapColumn<Int>(minimumCapacity: Tagged<Int, Cardinal>(4))
+            column.append(1)
+            column.append(2)
+            column.append(3)
+            let s = SharedColumn<Int>(column)
+            var sibling = s
+            let live = s.span
+            sibling.append(99)
+            var after = 0
+            for i in live.indices { after &+= live[i] }
+            #expect(after == 6)
+            let siblingCount = sibling.count
+            #expect(siblingCount == Tagged<Int, Cardinal>(4))
+            let ourCount = s.count
+            #expect(ourCount == Tagged<Int, Cardinal>(3))
+        }
     }
 }

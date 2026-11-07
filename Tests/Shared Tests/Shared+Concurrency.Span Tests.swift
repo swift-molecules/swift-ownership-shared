@@ -48,153 +48,161 @@ private struct Item: ~Copyable {
     }
 }
 
-@Suite
-struct `Shared Concurrency Span Window Tests` {
+enum `Shared+Concurrency.Span Tests` {}
 
-    @Test(arguments: [4, 12])
-    func `span borrows end before detach; the window holds under concurrency`(width: Int) async {
-        var proto: SharedColumn<Int> = makeShared(capacity: 8)
-        proto.append(1)
-        proto.append(2)
-        proto.append(3)
-        let frozen = proto
-        let outcomes = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
-            for t in 0..<width {
-                group.addTask {
-                    var mine = frozen
-                    let before = mine.withSpan { span in
-                        var acc = 0
-                        for i in 0..<span.count { acc &+= span[i] }
-                        return acc
-                    }
-                    let sharedBefore = (mine._boxID == frozen._boxID)
-                    mine.withUnique { column in
-                        column.append(40 &+ t)
-                    }
-                    let diverged = (mine._boxID != frozen._boxID)
-                    let after = mine.withSpan { span in
-                        var acc = 0
-                        for i in 0..<span.count { acc &+= span[i] }
-                        return acc
-                    }
-                    return before == 6 && sharedBefore && diverged && after == 46 &+ t
-                }
-            }
-            var out: [Bool] = []
-            for await ok in group { out.append(ok) }
-            return out
-        }
-        #expect(outcomes.count == width)
-        #expect(outcomes.allSatisfy { $0 })
-    }
+extension `Shared+Concurrency.Span Tests` {
+    @Suite
+    struct `Shared Concurrency Span Window Tests` {
 
-    @Test
-    func `borrow-only traffic never trips the gate`() async {
-        var proto: SharedColumn<Int> = makeShared(capacity: 4)
-        proto.append(7)
-        proto.append(8)
-        let frozen = proto
-        let outcomes = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
-            for _ in 0..<12 {
-                group.addTask {
-                    let mine = frozen
-                    var good = true
-                    for _ in 0..<200 {
-                        let stillShared = (mine._boxID == frozen._boxID)
-                        let viaColumn = mine.withColumn { column in
-                            column.count == Tagged<Int, Cardinal>(2)
+        @Test(arguments: [4, 12])
+        func `span borrows end before detach; the window holds under concurrency`(width: Int) async {
+            var proto: SharedColumn<Int> = makeShared(capacity: 8)
+            proto.append(1)
+            proto.append(2)
+            proto.append(3)
+            let frozen = proto
+            let outcomes = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
+                for t in 0..<width {
+                    group.addTask {
+                        var mine = frozen
+                        let before = mine.withSpan { span in
+                            var acc = 0
+                            for i in 0..<span.count { acc &+= span[i] }
+                            return acc
                         }
-                        let viaSpan = mine.withSpan { span in
-                            span.count == 2 && span[0] == 7 && span[1] == 8
+                        let sharedBefore = (mine._boxID == frozen._boxID)
+                        mine.withUnique { column in
+                            column.append(40 &+ t)
                         }
-                        good = good && stillShared && viaColumn && viaSpan
+                        let diverged = (mine._boxID != frozen._boxID)
+                        let after = mine.withSpan { span in
+                            var acc = 0
+                            for i in 0..<span.count { acc &+= span[i] }
+                            return acc
+                        }
+                        return before == 6 && sharedBefore && diverged && after == 46 &+ t
                     }
-                    return good
                 }
+                var out: [Bool] = []
+                for await ok in group { out.append(ok) }
+                return out
             }
-            var out: [Bool] = []
-            for await ok in group { out.append(ok) }
-            return out
+            #expect(outcomes.count == width)
+            #expect(outcomes.allSatisfy { $0 })
         }
-        #expect(outcomes.count == 12)
-        #expect(outcomes.allSatisfy { $0 })
-        let sourceUntouched = (proto._boxID == frozen._boxID)
-        #expect(sourceUntouched)
-    }
 
-    @Test(arguments: [4, 12])
-    func `the payload-threading withUnique form moves values in lawfully`(width: Int) async {
-        var proto: SharedColumn<Int> = makeShared(capacity: 8)
-        proto.append(5)
-        let frozen = proto
-        let outcomes = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
-            for t in 0..<width {
-                group.addTask {
-                    var mine = frozen
-                    mine.withUnique(consuming: 90 &+ t) { column, value in
-                        column.append(value)
-                    }
-                    return mine.withSpan { span in
-                        span.count == 2 && span[0] == 5 && span[1] == 90 &+ t
+        @Test
+        func `borrow-only traffic never trips the gate`() async {
+            var proto: SharedColumn<Int> = makeShared(capacity: 4)
+            proto.append(7)
+            proto.append(8)
+            let frozen = proto
+            let outcomes = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
+                for _ in 0..<12 {
+                    group.addTask {
+                        let mine = frozen
+                        var good = true
+                        for _ in 0..<200 {
+                            let stillShared = (mine._boxID == frozen._boxID)
+                            let viaColumn = mine.withColumn { column in
+                                column.count == Tagged<Int, Cardinal>(2)
+                            }
+                            let viaSpan = mine.withSpan { span in
+                                span.count == 2 && span[0] == 7 && span[1] == 8
+                            }
+                            good = good && stillShared && viaColumn && viaSpan
+                        }
+                        return good
                     }
                 }
+                var out: [Bool] = []
+                for await ok in group { out.append(ok) }
+                return out
             }
-            var out: [Bool] = []
-            for await ok in group { out.append(ok) }
-            return out
+            #expect(outcomes.count == 12)
+            #expect(outcomes.allSatisfy { $0 })
+            let sourceUntouched = (proto._boxID == frozen._boxID)
+            #expect(sourceUntouched)
         }
-        #expect(outcomes.count == width)
-        #expect(outcomes.allSatisfy { $0 })
+
+        @Test(arguments: [4, 12])
+        func `the payload-threading withUnique form moves values in lawfully`(width: Int) async {
+            var proto: SharedColumn<Int> = makeShared(capacity: 8)
+            proto.append(5)
+            let frozen = proto
+            let outcomes = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
+                for t in 0..<width {
+                    group.addTask {
+                        var mine = frozen
+                        mine.withUnique(consuming: 90 &+ t) { column, value in
+                            column.append(value)
+                        }
+                        return mine.withSpan { span in
+                            span.count == 2 && span[0] == 5 && span[1] == 90 &+ t
+                        }
+                    }
+                }
+                var out: [Bool] = []
+                for await ok in group { out.append(ok) }
+                return out
+            }
+            #expect(outcomes.count == width)
+            #expect(outcomes.allSatisfy { $0 })
+        }
     }
 }
 
-@Suite(.serialized)
-struct `Shared Concurrency Move Only Tests` {
+extension `Shared+Concurrency.Span Tests` {
+    @Suite(.serialized)
+    struct `Shared Concurrency Move Only Tests` {
 
-    @Test
-    func `concurrent task-local move-only columns: no-op gates and exact teardown`() async {
-        Ledger.reset()
-        let outcomes = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
-            for t in 0..<12 {
-                group.addTask {
-                    var column: SharedColumn<Item> = makeSharedMoveOnly(capacity: 8)
-                    column.appendAssumingUnique(Item(t &* 10))
-                    column.appendAssumingUnique(Item(t &* 10 &+ 1))
-                    column.withUnique { buffer in
-                        buffer.append(Item(t &* 10 &+ 2))
+        @Test
+        func `concurrent task-local move-only columns: no-op gates and exact teardown`() async {
+            Ledger.reset()
+            let outcomes = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
+                for t in 0..<12 {
+                    group.addTask {
+                        var column: SharedColumn<Item> = makeSharedMoveOnly(capacity: 8)
+                        column.appendAssumingUnique(Item(t &* 10))
+                        column.appendAssumingUnique(Item(t &* 10 &+ 1))
+                        column.withUnique { buffer in
+                            buffer.append(Item(t &* 10 &+ 2))
+                        }
+                        let took = column.removeLastAssumingUnique()
+                        let tookID = took.id
+                        _ = consume took
+                        let n = column.count
+                        return tookID == t &* 10 &+ 2 && n == Tagged<Item, Cardinal>(2)
                     }
-                    let took = column.removeLastAssumingUnique()
-                    let tookID = took.id
-                    _ = consume took
-                    let n = column.count
-                    return tookID == t &* 10 &+ 2 && n == Tagged<Item, Cardinal>(2)
                 }
+                var out: [Bool] = []
+                for await ok in group { out.append(ok) }
+                return out
             }
-            var out: [Bool] = []
-            for await ok in group { out.append(ok) }
-            return out
-        }
-        #expect(outcomes.count == 12)
-        #expect(outcomes.allSatisfy { $0 })
+            #expect(outcomes.count == 12)
+            #expect(outcomes.allSatisfy { $0 })
 
-        let created = Ledger.created.load(ordering: .sequentiallyConsistent)
-        let destroyed = Ledger.destroyed.load(ordering: .sequentiallyConsistent)
-        #expect(created == 36)
-        #expect(destroyed == created)
+            let created = Ledger.created.load(ordering: .sequentiallyConsistent)
+            let destroyed = Ledger.destroyed.load(ordering: .sequentiallyConsistent)
+            #expect(created == 36)
+            #expect(destroyed == created)
+        }
     }
 }
 
-@Suite
-struct `Shared Span Allocator Tests` {
+extension `Shared+Concurrency.Span Tests` {
+    @Suite
+    struct `Shared Span Allocator Tests` {
 
-    @Test
-    func `span access works on a heap-backed column`() {
-        typealias Column = Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Int>>.Linear
-        var shared = Ownership.Shared<Int, Column>(Column(minimumCapacity: Tagged<Int, Cardinal>(4)))
-        shared.append(5)
-        shared.append(6)
-        shared.withMutableSpan { span in span[0] = 50 }
-        let sum = shared.withSpan { span in span[0] &+ span[1] }
-        #expect(sum == 56)
+        @Test
+        func `span access works on a heap-backed column`() {
+            typealias Column = Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Int>>.Linear
+            var shared = Ownership.Shared<Int, Column>(Column(minimumCapacity: Tagged<Int, Cardinal>(4)))
+            shared.append(5)
+            shared.append(6)
+            shared.withMutableSpan { span in span[0] = 50 }
+            let sum = shared.withSpan { span in span[0] &+ span[1] }
+            #expect(sum == 56)
+        }
     }
 }

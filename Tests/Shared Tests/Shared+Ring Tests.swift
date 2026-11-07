@@ -24,132 +24,140 @@ private typealias BoundedRing<E: ~Copyable> = Buffer<HeapStorage<E>>.Ring.Bounde
 private typealias SharedRing<E: ~Copyable> = Ownership.Shared<E, GrowableRing<E>>
 private typealias SharedBoundedRing<E: ~Copyable> = Ownership.Shared<E, BoundedRing<E>>
 
-@Suite
-struct `Shared Ring Law Tests` {
+enum `Shared+Ring Tests` {}
 
-    @Test
-    func `the shared growable-ring column obeys the seam ledger laws`() {
-        let violations = Seam.Ledger.violations(
-            makeEmpty: { SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(4))) },
-            element: { $0 }
-        )
-        #expect(violations.isEmpty, "\(violations)")
-    }
+extension `Shared+Ring Tests` {
+    @Suite
+    struct `Shared Ring Law Tests` {
 
-    @Test
-    func `the shared bounded-ring column obeys the seam ledger laws`() {
-        let violations = Seam.Ledger.violations(
-            makeEmpty: {
-                SharedBoundedRing<Int>(BoundedRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
-            },
-            element: { $0 }
-        )
-        #expect(violations.isEmpty, "\(violations)")
-    }
-}
-
-@Suite(.serialized)
-struct `Shared Ring CoW Tests` {
-
-    @Test
-    func `copies share the box until a gated seam write diverges them`() {
-        var s = SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
-        s.initialize(at: 0, to: 1)
-        s.initialize(at: 1, to: 2)
-        let t = s
-        let sharedBefore = (s._boxID == t._boxID)
-        #expect(sharedBefore)
-        s[0] = 100
-        let diverged = (s._boxID != t._boxID)
-        #expect(diverged)
-        let mine = s[0]
-        let theirs = t[0]
-        #expect(mine == 100)
-        #expect(theirs == 1)
-    }
-
-    @Test
-    func `a front move through the seam detaches from the sibling`() {
-        var s = SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
-        s.initialize(at: 0, to: 7)
-        s.initialize(at: 1, to: 8)
-        let t = s
-        let popped = s.move(at: 0)
-        #expect(popped == 7)
-        let mine = s.count
-        let theirs = t.count
-        #expect(mine == Tagged<Int, Cardinal>(1))
-        #expect(theirs == Tagged<Int, Cardinal>(2))
-        let myFront = s[0]
-        let theirFront = t[0]
-        #expect(myFront == 8)
-        #expect(theirFront == 7)
-    }
-}
-
-@Suite(.serialized)
-struct `Shared Ring Scoped Access Tests` {
-
-    @Test
-    func `withUnique detaches first and reaches ops the seam cannot spell`() {
-        var s = SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
-        s.initialize(at: 0, to: 2)
-        let t = s
-        s.withUnique { ring in
-            ring.pushFront(1)
-        }
-        let myFront = s[0]
-        let myCount = s.count
-        #expect(myFront == 1)
-        #expect(myCount == Tagged<Int, Cardinal>(2))
-        let theirCount = t.count
-        #expect(theirCount == Tagged<Int, Cardinal>(1))
-        let theirFront = t[0]
-        #expect(theirFront == 2)
-    }
-
-    @Test
-    func `withUnique(consuming:) threads a move-only payload into the column`() {
-        ScopedProbe.reset()
-        do {
-            var s = SharedRing<ScopedItem>(
-                GrowableRing<ScopedItem>(minimumCapacity: Tagged<ScopedItem, Cardinal>(2))
+        @Test
+        func `the shared growable-ring column obeys the seam ledger laws`() {
+            let violations = Seam.Ledger.violations(
+                makeEmpty: { SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(4))) },
+                element: { $0 }
             )
-            s.withUnique(consuming: ScopedItem(1)) { ring, item in
-                ring.pushBack(item)
+            #expect(violations.isEmpty, "\(violations)")
+        }
+
+        @Test
+        func `the shared bounded-ring column obeys the seam ledger laws`() {
+            let violations = Seam.Ledger.violations(
+                makeEmpty: {
+                    SharedBoundedRing<Int>(BoundedRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
+                },
+                element: { $0 }
+            )
+            #expect(violations.isEmpty, "\(violations)")
+        }
+    }
+}
+
+extension `Shared+Ring Tests` {
+    @Suite(.serialized)
+    struct `Shared Ring CoW Tests` {
+
+        @Test
+        func `copies share the box until a gated seam write diverges them`() {
+            var s = SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
+            s.initialize(at: 0, to: 1)
+            s.initialize(at: 1, to: 2)
+            let t = s
+            let sharedBefore = (s._boxID == t._boxID)
+            #expect(sharedBefore)
+            s[0] = 100
+            let diverged = (s._boxID != t._boxID)
+            #expect(diverged)
+            let mine = s[0]
+            let theirs = t[0]
+            #expect(mine == 100)
+            #expect(theirs == 1)
+        }
+
+        @Test
+        func `a front move through the seam detaches from the sibling`() {
+            var s = SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
+            s.initialize(at: 0, to: 7)
+            s.initialize(at: 1, to: 8)
+            let t = s
+            let popped = s.move(at: 0)
+            #expect(popped == 7)
+            let mine = s.count
+            let theirs = t.count
+            #expect(mine == Tagged<Int, Cardinal>(1))
+            #expect(theirs == Tagged<Int, Cardinal>(2))
+            let myFront = s[0]
+            let theirFront = t[0]
+            #expect(myFront == 8)
+            #expect(theirFront == 7)
+        }
+    }
+}
+
+extension `Shared+Ring Tests` {
+    @Suite(.serialized)
+    struct `Shared Ring Scoped Access Tests` {
+
+        @Test
+        func `withUnique detaches first and reaches ops the seam cannot spell`() {
+            var s = SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
+            s.initialize(at: 0, to: 2)
+            let t = s
+            s.withUnique { ring in
+                ring.pushFront(1)
             }
+            let myFront = s[0]
+            let myCount = s.count
+            #expect(myFront == 1)
+            #expect(myCount == Tagged<Int, Cardinal>(2))
+            let theirCount = t.count
+            #expect(theirCount == Tagged<Int, Cardinal>(1))
+            let theirFront = t[0]
+            #expect(theirFront == 2)
+        }
+
+        @Test
+        func `withUnique(consuming:) threads a move-only payload into the column`() {
+            ScopedProbe.reset()
+            do {
+                var s = SharedRing<ScopedItem>(
+                    GrowableRing<ScopedItem>(minimumCapacity: Tagged<ScopedItem, Cardinal>(2))
+                )
+                s.withUnique(consuming: ScopedItem(1)) { ring, item in
+                    ring.pushBack(item)
+                }
+                let n = s.count
+                #expect(n == Tagged<ScopedItem, Cardinal>(1))
+                let lived = ScopedProbe.destroyedSorted
+                #expect(lived.isEmpty)
+            }
+            let all = ScopedProbe.destroyedSorted
+            #expect(all == [1])
+        }
+
+        @Test
+        func `withColumn reads without detaching`() {
+            var s = SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(2)))
+            s.initialize(at: 0, to: 42)
+            let t = s
+            let read = s.withColumn { ring in ring[0] }
+            #expect(read == 42)
+            let stillShared = (s._boxID == t._boxID)
+            #expect(stillShared)
+            _ = t
+        }
+
+        @Test
+        func `the bounded column rejects on full through the box`() {
+            var s = SharedBoundedRing<Int>(BoundedRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(2)))
+            s.initialize(at: 0, to: 1)
+            s.initialize(at: 1, to: 2)
+            let rejected = s.withUnique { ring in
+                ring.push.back(3)
+            }
+            #expect(rejected == 3)
             let n = s.count
-            #expect(n == Tagged<ScopedItem, Cardinal>(1))
-            let lived = ScopedProbe.destroyedSorted
-            #expect(lived.isEmpty)
+            #expect(n == Tagged<Int, Cardinal>(2))
         }
-        let all = ScopedProbe.destroyedSorted
-        #expect(all == [1])
-    }
-
-    @Test
-    func `withColumn reads without detaching`() {
-        var s = SharedRing<Int>(GrowableRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(2)))
-        s.initialize(at: 0, to: 42)
-        let t = s
-        let read = s.withColumn { ring in ring[0] }
-        #expect(read == 42)
-        let stillShared = (s._boxID == t._boxID)
-        #expect(stillShared)
-        _ = t
-    }
-
-    @Test
-    func `the bounded column rejects on full through the box`() {
-        var s = SharedBoundedRing<Int>(BoundedRing<Int>(minimumCapacity: Tagged<Int, Cardinal>(2)))
-        s.initialize(at: 0, to: 1)
-        s.initialize(at: 1, to: 2)
-        let rejected = s.withUnique { ring in
-            ring.push.back(3)
-        }
-        #expect(rejected == 3)
-        let n = s.count
-        #expect(n == Tagged<Int, Cardinal>(2))
     }
 }
 
@@ -168,40 +176,42 @@ extension ScopedProbe {
     static var destroyedSorted: [Int] { unsafe _destroyed.sorted() }
 }
 
-@Suite(.serialized)
-struct `Shared Ring Teardown Tests` {
+extension `Shared+Ring Tests` {
+    @Suite(.serialized)
+    struct `Shared Ring Teardown Tests` {
 
-    @Test
-    func `the box drain destroys live move-only elements exactly once`() {
-        DrainProbe.reset()
-        do {
-            var s = SharedRing<DrainItem>(
-                GrowableRing<DrainItem>(minimumCapacity: Tagged<DrainItem, Cardinal>(4))
-            )
-            s.initialize(at: Index<DrainItem>(Ordinal(UInt(0))), to: DrainItem(1))
-            s.initialize(at: Index<DrainItem>(Ordinal(UInt(1))), to: DrainItem(2))
-            let taken = s.move(at: Index<DrainItem>(Ordinal(UInt(0))))
-            let tid = taken.id
-            #expect(tid == 1)
-            _ = consume taken
-            let mid = DrainProbe.destroyedSorted
-            #expect(mid == [1])
+        @Test
+        func `the box drain destroys live move-only elements exactly once`() {
+            DrainProbe.reset()
+            do {
+                var s = SharedRing<DrainItem>(
+                    GrowableRing<DrainItem>(minimumCapacity: Tagged<DrainItem, Cardinal>(4))
+                )
+                s.initialize(at: Index<DrainItem>(Ordinal(UInt(0))), to: DrainItem(1))
+                s.initialize(at: Index<DrainItem>(Ordinal(UInt(1))), to: DrainItem(2))
+                let taken = s.move(at: Index<DrainItem>(Ordinal(UInt(0))))
+                let tid = taken.id
+                #expect(tid == 1)
+                _ = consume taken
+                let mid = DrainProbe.destroyedSorted
+                #expect(mid == [1])
+            }
+            let all = DrainProbe.destroyedSorted
+            #expect(all == [1, 2])
         }
-        let all = DrainProbe.destroyedSorted
-        #expect(all == [1, 2])
-    }
 
-    @Test
-    func `the bounded box drain tears down its live elements`() {
-        DrainProbe.reset()
-        do {
-            var s = SharedBoundedRing<DrainItem>(
-                BoundedRing<DrainItem>(minimumCapacity: Tagged<DrainItem, Cardinal>(2))
-            )
-            s.initialize(at: Index<DrainItem>(Ordinal(UInt(0))), to: DrainItem(5))
+        @Test
+        func `the bounded box drain tears down its live elements`() {
+            DrainProbe.reset()
+            do {
+                var s = SharedBoundedRing<DrainItem>(
+                    BoundedRing<DrainItem>(minimumCapacity: Tagged<DrainItem, Cardinal>(2))
+                )
+                s.initialize(at: Index<DrainItem>(Ordinal(UInt(0))), to: DrainItem(5))
+            }
+            let all = DrainProbe.destroyedSorted
+            #expect(all == [5])
         }
-        let all = DrainProbe.destroyedSorted
-        #expect(all == [5])
     }
 }
 

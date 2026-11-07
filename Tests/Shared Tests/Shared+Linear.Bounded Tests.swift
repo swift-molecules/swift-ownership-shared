@@ -22,57 +22,63 @@ private typealias BoundedLinear<E: ~Copyable> = Buffer<HeapStorage<E>>.Linear.Bo
 
 private typealias SharedBoundedLinear<E: ~Copyable> = Ownership.Shared<E, BoundedLinear<E>>
 
-@Suite
-struct `Shared Linear Bounded Law Tests` {
+enum `Shared+Linear.Bounded Tests` {}
 
-    @Test
-    func `the shared bounded-linear column obeys the seam ledger laws`() {
-        let violations = Seam.Ledger.violations(
-            makeEmpty: {
-                SharedBoundedLinear<Int>(BoundedLinear<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
-            },
-            element: { $0 }
-        )
-        #expect(violations.isEmpty, "\(violations)")
+extension `Shared+Linear.Bounded Tests` {
+    @Suite
+    struct `Shared Linear Bounded Law Tests` {
+
+        @Test
+        func `the shared bounded-linear column obeys the seam ledger laws`() {
+            let violations = Seam.Ledger.violations(
+                makeEmpty: {
+                    SharedBoundedLinear<Int>(BoundedLinear<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
+                },
+                element: { $0 }
+            )
+            #expect(violations.isEmpty, "\(violations)")
+        }
     }
 }
 
-@Suite(.serialized)
-struct `Shared Linear Bounded CoW Tests` {
+extension `Shared+Linear.Bounded Tests` {
+    @Suite(.serialized)
+    struct `Shared Linear Bounded CoW Tests` {
 
-    @Test
-    func `copies share the box; a gated write detaches with capacity preserved exactly`() {
-        var s = SharedBoundedLinear<Int>(BoundedLinear<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
-        s.initialize(at: 0, to: 1)
-        s.initialize(at: 1, to: 2)
-        let capacityBefore = s.capacity
-        let t = s
-        let sharedBefore = (s._boxID == t._boxID)
-        #expect(sharedBefore)
-        s[0] = 100
-        let diverged = (s._boxID != t._boxID)
-        #expect(diverged)
-        #expect(s.capacity == capacityBefore)
-        let mine = s[0]
-        let theirs = t[0]
-        #expect(mine == 100)
-        #expect(theirs == 1)
-    }
-
-    @Test
-    func `a move-only bounded column drains through the box deinit`() {
-        BoundedProbe.reset()
-        do {
-            var s = SharedBoundedLinear<BoundedItem>(
-                BoundedLinear<BoundedItem>(minimumCapacity: Tagged<BoundedItem, Cardinal>(2))
-            )
-            s.initialize(at: 0, to: BoundedItem(7))
-            s.initialize(at: 1, to: BoundedItem(8))
-            let n = s.count
-            #expect(n == Tagged<BoundedItem, Cardinal>(2))
+        @Test
+        func `copies share the box; a gated write detaches with capacity preserved exactly`() {
+            var s = SharedBoundedLinear<Int>(BoundedLinear<Int>(minimumCapacity: Tagged<Int, Cardinal>(4)))
+            s.initialize(at: 0, to: 1)
+            s.initialize(at: 1, to: 2)
+            let capacityBefore = s.capacity
+            let t = s
+            let sharedBefore = (s._boxID == t._boxID)
+            #expect(sharedBefore)
+            s[0] = 100
+            let diverged = (s._boxID != t._boxID)
+            #expect(diverged)
+            #expect(s.capacity == capacityBefore)
+            let mine = s[0]
+            let theirs = t[0]
+            #expect(mine == 100)
+            #expect(theirs == 1)
         }
-        let all = BoundedProbe.destroyedSorted
-        #expect(all == [7, 8])
+
+        @Test
+        func `a move-only bounded column drains through the box deinit`() {
+            BoundedProbe.reset()
+            do {
+                var s = SharedBoundedLinear<BoundedItem>(
+                    BoundedLinear<BoundedItem>(minimumCapacity: Tagged<BoundedItem, Cardinal>(2))
+                )
+                s.initialize(at: 0, to: BoundedItem(7))
+                s.initialize(at: 1, to: BoundedItem(8))
+                let n = s.count
+                #expect(n == Tagged<BoundedItem, Cardinal>(2))
+            }
+            let all = BoundedProbe.destroyedSorted
+            #expect(all == [7, 8])
+        }
     }
 }
 

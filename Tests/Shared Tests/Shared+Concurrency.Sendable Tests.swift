@@ -34,21 +34,25 @@ private struct Item: ~Copyable, Sendable {
     init(_ id: Int) { self.id = id }
 }
 
-@Suite
-struct `Shared Sendable Surface Tests` {
+enum `Shared+Concurrency.Sendable Tests` {}
 
-    @Test
-    func `sendable composes across columns and rungs`() {
-        let heap: SharedColumn<Int> = makeShared(capacity: 1)
-        requireSendable(heap)
-        let bounded = SharedBounded<Int>(BoundedColumn<Int>(minimumCapacity: Tagged<Int, Cardinal>(1)))
-        requireSendable(bounded)
+extension `Shared+Concurrency.Sendable Tests` {
+    @Suite
+    struct `Shared Sendable Surface Tests` {
 
-        let moveOnly: SharedColumn<Item> = makeSharedMoveOnly(capacity: 1)
-        requireSendable(moveOnly)
-        let n = moveOnly.count
-        #expect(n == Tagged<Item, Cardinal>(0))
-        #expect(Bool(true))
+        @Test
+        func `sendable composes across columns and rungs`() {
+            let heap: SharedColumn<Int> = makeShared(capacity: 1)
+            requireSendable(heap)
+            let bounded = SharedBounded<Int>(BoundedColumn<Int>(minimumCapacity: Tagged<Int, Cardinal>(1)))
+            requireSendable(bounded)
+
+            let moveOnly: SharedColumn<Item> = makeSharedMoveOnly(capacity: 1)
+            requireSendable(moveOnly)
+            let n = moveOnly.count
+            #expect(n == Tagged<Item, Cardinal>(0))
+            #expect(Bool(true))
+        }
     }
 }
 
