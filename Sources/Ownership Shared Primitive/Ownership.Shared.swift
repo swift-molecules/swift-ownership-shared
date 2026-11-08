@@ -12,6 +12,7 @@ import Property
 public import Storage
 import Store
 import Tagged
+import Affine
 
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 
@@ -60,5 +61,61 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
     ) throws(Failure) -> R {
         var span = buffer.mutableSpan()
         return try body(&span)
+    }
+}
+
+extension Ownership.Shared: Equatable where Element: Equatable, B: ~Copyable {
+
+    @inlinable
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        guard lhs.count == rhs.count else { return false }
+        var slot: Index<Element> = .zero
+        let end = lhs.count.map(Ordinal.init)
+        while slot < end {
+            guard lhs[slot] == rhs[slot] else { return false }
+            slot += .one
+        }
+        return true
+    }
+}
+
+extension Ownership.Shared: Hashable where Element: Hashable, B: ~Copyable {
+
+    @inlinable
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(Int(bitPattern: count.underlying))
+        var slot: Index<Element> = .zero
+        let end = count.map(Ordinal.init)
+        while slot < end {
+            hasher.combine(self[slot])
+            slot += .one
+        }
+    }
+}
+
+extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
+
+    @inlinable
+    public mutating func withUnique<R: ~Copyable, Failure: Swift::Error>(
+        _ body: (inout B) throws(Failure) -> R
+    ) throws(Failure) -> R {
+        ensureUnique()
+        return try unsafe body(&box.unguarded)
+    }
+
+    @inlinable
+    public mutating func withUnique<T: ~Copyable, R: ~Copyable, Failure: Swift::Error>(
+        consuming payload: consuming T,
+        _ body: (inout B, consuming T) throws(Failure) -> R
+    ) throws(Failure) -> R {
+        ensureUnique()
+        return try unsafe body(&box.unguarded, payload)
+    }
+
+    @inlinable
+    public func withColumn<R: ~Copyable, Failure: Swift::Error>(
+        _ body: (borrowing B) throws(Failure) -> R
+    ) throws(Failure) -> R {
+        try unsafe body(box.unguarded)
     }
 }
