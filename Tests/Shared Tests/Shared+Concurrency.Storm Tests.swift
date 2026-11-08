@@ -73,7 +73,7 @@ extension `Shared+Concurrency.Storm Tests` {
                 for t in 0..<8 {
                     group.addTask {
                         var mine = frozen
-                        for k in 0..<99 {
+                        (0..<99).forEach { k in
                             mine.append(t &* 1000 &+ k)
                             if k % 3 == 0 { _ = mine.removeLast() }
                         }
@@ -126,7 +126,7 @@ extension `Shared+Concurrency.Storm Tests` {
                                 let consistent = mine.withSpan { span in
                                     guard span.count == model.count else { return false }
                                     var same = true
-                                    for i in 0..<span.count { same = same && (span[i] == model[i]) }
+                                    (0..<span.count).forEach { i in same = same && (span[i] == model[i]) }
                                     return same
                                 }
                                 good = good && consistent
@@ -135,7 +135,7 @@ extension `Shared+Concurrency.Storm Tests` {
                         let final = mine.withSpan { span in
                             guard span.count == model.count else { return false }
                             var same = true
-                            for i in 0..<span.count { same = same && (span[i] == model[i]) }
+                            (0..<span.count).forEach { i in same = same && (span[i] == model[i]) }
                             return same
                         }
                         return good && final
@@ -172,7 +172,7 @@ extension `Shared+Concurrency.Storm Tests` {
                                 let values = mine.withSpan { span in
                                     var out: [Int] = []
                                     out.reserveCapacity(span.count)
-                                    for i in 0..<span.count { out.append(span[i].value) }
+                                    (0..<span.count).forEach { i in out.append(span[i].value) }
                                     return out
                                 }
                                 good = good && (values == [0, 1, 2, 3])
@@ -183,21 +183,21 @@ extension `Shared+Concurrency.Storm Tests` {
                     for t in 0..<6 {
                         group.addTask {
                             var mine = frozen
-                            for k in 0..<20 {
+                            (0..<20).forEach { k in
                                 mine.append(Payload(t &* 100 &+ k))
                             }
                             mine.withMutableSpan { span in
-                                for i in 0..<4 { span[i] = Payload(span[i].value &+ 50) }
+                                (0..<4).forEach { i in span[i] = Payload(span[i].value &+ 50) }
                             }
                             let values = mine.withSpan { span in
                                 var out: [Int] = []
                                 out.reserveCapacity(span.count)
-                                for i in 0..<span.count { out.append(span[i].value) }
+                                (0..<span.count).forEach { i in out.append(span[i].value) }
                                 return out
                             }
                             var model: [Int] = []
-                            for i in 0..<4 { model.append(i &+ 50) }
-                            for k in 0..<20 { model.append(t &* 100 &+ k) }
+                            (0..<4).forEach { i in model.append(i &+ 50) }
+                            (0..<20).forEach { k in model.append(t &* 100 &+ k) }
                             return values == model
                         }
                     }

@@ -67,7 +67,7 @@ extension `Shared+Concurrency.Span Tests` {
                         var mine = frozen
                         let before = mine.withSpan { span in
                             var acc = 0
-                            for i in 0..<span.count { acc &+= span[i] }
+                            (0..<span.count).forEach { i in acc &+= span[i] }
                             return acc
                         }
                         let sharedBefore = (mine._boxID == frozen._boxID)
@@ -77,7 +77,7 @@ extension `Shared+Concurrency.Span Tests` {
                         let diverged = (mine._boxID != frozen._boxID)
                         let after = mine.withSpan { span in
                             var acc = 0
-                            for i in 0..<span.count { acc &+= span[i] }
+                            (0..<span.count).forEach { i in acc &+= span[i] }
                             return acc
                         }
                         return before == 6 && sharedBefore && diverged && after == 46 &+ t

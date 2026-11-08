@@ -165,7 +165,7 @@ struct `Shared Tests` {
         a.append(3)
         let sum = a.withSpan { span in
             var acc = 0
-            for i in 0..<span.count { acc += span[i] }
+            (0..<span.count).forEach { i in acc += span[i] }
             return acc
         }
         #expect(sum == 6)

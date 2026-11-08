@@ -66,13 +66,13 @@ extension `Shared+Concurrency.Detach Tests` {
                         var mine = frozen
                         mine.append(100 &+ t)
                         mine.withMutableSpan { span in
-                            for i in 0..<span.count { span[i] &+= t }
+                            (0..<span.count).forEach { i in span[i] &+= t }
                         }
                         _ = mine.removeLast()
                         let snapshot = mine.withSpan { span in
                             var out: [Int] = []
                             out.reserveCapacity(span.count)
-                            for i in 0..<span.count { out.append(span[i]) }
+                            (0..<span.count).forEach { i in out.append(span[i]) }
                             return out
                         }
                         return (t, snapshot)
@@ -92,7 +92,7 @@ extension `Shared+Concurrency.Detach Tests` {
             }
             let source = proto.withSpan { span in
                 var out: [Int] = []
-                for i in 0..<span.count { out.append(span[i]) }
+                (0..<span.count).forEach { i in out.append(span[i]) }
                 return out
             }
             #expect(source == Array(0..<8))
@@ -153,11 +153,11 @@ extension `Shared+Concurrency.Detach Tests` {
                             let values = mine.withSpan { span in
                                 var out: [Int] = []
                                 out.reserveCapacity(span.count)
-                                for i in 0..<span.count { out.append(span[i].value) }
+                                (0..<span.count).forEach { i in out.append(span[i].value) }
                                 return out
                             }
                             var model: [Int] = []
-                            for i in 0..<8 { model.append(i % 2 == 0 ? i &+ 1000 : i) }
+                            (0..<8).forEach { i in model.append(i % 2 == 0 ? i &+ 1000 : i) }
                             model.append(1100 &+ t)
                             return values == model
                         }
