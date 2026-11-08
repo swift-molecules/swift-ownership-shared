@@ -24,9 +24,9 @@ import Tagged
         SharedColumn<E>(HeapColumn<E>(minimumCapacity: Tagged<E, Cardinal>(capacity)))
     }
 
-enum `Shared+Concurrency.AssertLane Tests` {}
+    enum `Shared+Concurrency.AssertLane Tests` {}
 
-extension `Shared+Concurrency.AssertLane Tests` {
+    extension `Shared+Concurrency.AssertLane Tests` {
         @Suite
         struct `Shared Assert Lane Death Tests` {
 
@@ -100,6 +100,6 @@ extension `Shared+Concurrency.AssertLane Tests` {
                 #expect(bCount == Tagged<Int, Cardinal>(1))
             }
         }
-}
+    }
 
 #endif

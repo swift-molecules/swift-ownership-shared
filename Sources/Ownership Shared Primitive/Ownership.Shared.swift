@@ -1,3 +1,4 @@
+import Affine
 public import Buffer
 public import Buffer_Linear_Primitive
 import Cardinal
@@ -12,7 +13,6 @@ import Property
 public import Storage
 import Store
 import Tagged
-import Affine
 
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 
