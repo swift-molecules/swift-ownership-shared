@@ -166,6 +166,9 @@ let package = Package(
                 .product(name: "Carrier", package: "swift-carrier"),
                 .product(name: "Ordinal", package: "swift-ordinal"),
                 .product(name: "Property", package: "swift-property"),
+                .product(name: "Hash Indexed Primitive", package: "swift-hash-table"),
+                .product(name: "Hash Table Primitive", package: "swift-hash-table"),
+                .product(name: "Memory Small", package: "swift-memory-allocation"),
             ]
         ),
 

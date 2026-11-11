@@ -18,6 +18,11 @@ import Tagged
 
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 
+    /// Shares a hash indexed column.
+    ///
+    /// The box drains nothing before it destroys the column: the dense storage destroys its own members and
+    /// both planes of the index are freed with it, so emptying the column first would refill an index that is
+    /// about to be freed.
     @inlinable
     public init<Resource: Memory.Growable & SendableMetatype & ~Copyable>(
         _ column:
@@ -31,12 +36,15 @@ extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
         >,
         Element: Swift::Hashable & SendableMetatype
     {
-        self.init(box: Ownership.Box(column, drain: { $0.removeAll(keepingCapacity: true) }))
+        self.init(box: Ownership.Box(column, drain: { _ in }))
     }
 }
 
 extension Ownership.Shared where Element: Copyable, B: ~Copyable {
 
+    /// Shares a hash indexed column whose copies detach on write.
+    ///
+    /// The box drains nothing before it destroys the column, for the reason given on the initializer above.
     @inlinable
     public init<Resource: Memory.Growable & SendableMetatype & ~Copyable>(
         _ column:
@@ -53,7 +61,7 @@ extension Ownership.Shared where Element: Copyable, B: ~Copyable {
         self.init(
             box: Ownership.Box(
                 column,
-                drain: { $0.removeAll(keepingCapacity: true) },
+                drain: { _ in },
                 clone: { $0.clone() }
             )
         )
