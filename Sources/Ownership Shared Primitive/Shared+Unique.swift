@@ -16,18 +16,25 @@ public import Tagged
 
 extension Ownership.Shared where Element: ~Copyable, B: ~Copyable {
 
+    /// Shares a linear buffer.
+    ///
+    /// The box drains nothing before it destroys the buffer: its storage destroys its own elements, as it does
+    /// for a buffer that was never shared, so emptying the buffer first would do that work twice over.
     @inlinable
     public init<Resource: Memory.Growable & SendableMetatype & ~Copyable>(
         _ buffer:
             consuming Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear
     )
     where B == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<Element>>.Linear {
-        self.init(box: Ownership.Box(buffer, drain: { $0.removeAll(keepingCapacity: true) }))
+        self.init(box: Ownership.Box(buffer, drain: { _ in }))
     }
 }
 
 extension Ownership.Shared where Element: Copyable, B: ~Copyable {
 
+    /// Shares a linear buffer whose copies detach on write.
+    ///
+    /// The box drains nothing before it destroys the buffer, for the reason given on the initializer above.
     @inlinable
     public init<Resource: Memory.Growable & SendableMetatype & ~Copyable>(
         _ buffer:
@@ -37,7 +44,7 @@ extension Ownership.Shared where Element: Copyable, B: ~Copyable {
         self.init(
             box: Ownership.Box(
                 buffer,
-                drain: { $0.removeAll(keepingCapacity: true) },
+                drain: { _ in },
                 clone: { $0.clone() }
             )
         )
